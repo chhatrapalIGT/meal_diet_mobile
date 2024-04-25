@@ -10,8 +10,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
-  const [email, setEmail] = useState('kajal1@yopmail.com');
-  const [password, setPassword] = useState('kajal@1234');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const showToast = (type, text1, text2) => {
     Toast.show({
