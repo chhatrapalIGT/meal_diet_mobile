@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "Mind-Diet",
+    "slug": "LOGIN-REGISTER-UI",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/SignupPageimage.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#90ee90"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rashmi19.LOGINREGISTERUI"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.rashmi19.LOGINREGISTERUI"
+    },
+    "web": {
+      "favicon": "./assets/icon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bd6a8194-d58f-4a9e-9432-2393a2403cf8"
+      }
+    }
+  }
+}
