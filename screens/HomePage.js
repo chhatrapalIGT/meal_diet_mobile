@@ -196,7 +196,7 @@ const HomePage = ({ route }) => {
         showToast("error", response.data.error);
       }
     } catch (error) {
-      console.error("Error logging in:", error);
+      console.log("Error logging in:", error);
     }
   };
   useEffect(() => {

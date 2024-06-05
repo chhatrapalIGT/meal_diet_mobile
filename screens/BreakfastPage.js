@@ -21,7 +21,7 @@ const BreakfastPage = () => {
 
       setMealPlan(response.data.dietPlan);
     } catch (error) {
-      console.error('Error fetching meal plan:', error);
+      console.log('Error fetching meal plan:', error);
     }
   };
 

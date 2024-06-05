@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
+// import axios from "axios";
 import Toast from "react-native-toast-message";
 
 const showToast = (type, text1, text2) => {
@@ -20,7 +20,9 @@ const showToast = (type, text1, text2) => {
 };
 const MealSelectionPage = () => {
   const navigation = useNavigation();
-  const [foodgroupList, setFoodgroupList] = useState([]);
+  const foodgroupList =["Breakfast","Morning snack", "Lunch", "Afternoon snack", "Dinner", "Evening snack"]
+
+  // const [foodgroupList, setFoodgroupList] = useState(["Breakfast","Morning snack", "Lunch", "Afternoon snack", "Dinner", "Evening snack"]);
 
   // Initialize state to keep track of selected items for each meal
   const [selectedFoodGroupList, setSelectedFoodGroupList] = useState([]);
@@ -42,24 +44,24 @@ const MealSelectionPage = () => {
     }
   };
 
-  const getFoodGroupData = async () => {
-    try {
-      const response = await axios.post(
-        "http://209.97.132.213:3000/auth/findAllGroupArray"
-      );
-      if(response.data.success){
-        setFoodgroupList(response.data.data)
-      }else{
-        showToast('error', response.data.message);
-      }
+  // const getFoodGroupData = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://209.97.132.213:3000/auth/findAllGroupArray"
+  //     );
+  //     if(response.data.success){
+  //       // setFoodgroupList(response.data.data)
+  //     }else{
+  //       showToast('error', response.data.message);
+  //     }
 
-    } catch (error) {
-      console.error("Error logging in:", error);
-    }
-  };
-  useEffect(() => {
-    getFoodGroupData();
-  }, []);
+  //   } catch (error) {
+  //     console.log("Error logging in:", error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getFoodGroupData();
+  // }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
