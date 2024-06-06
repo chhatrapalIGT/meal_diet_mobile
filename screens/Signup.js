@@ -37,7 +37,7 @@ const Signup = ({ navigation }) => {
             type: type,
             text1: text1,
             text2: text2,
-            position: "center",
+            position: "top",
         });
     };
 
