@@ -75,7 +75,7 @@ const MealDetailsPage = ({ route }) => {
         setSelectedMeal(null);
       }
     } catch (error) {
-      console.log("Error logging in:", error);
+      // console.log("Error logging in:", error);
       setMealList([]);
       setSelectedMeal(null);
     }

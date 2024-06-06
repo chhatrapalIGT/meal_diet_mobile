@@ -96,9 +96,9 @@ const Signup = ({ navigation }) => {
             navigation.navigate("Login");
             //navigation.navigate('HomePage', { gender: gender });
         } catch (error) {
-            console.log("Error signing up:", error);
+            // console.log("Error signing up:", error);
 
-            if (error.response.status === 400) {
+            if (error?.response?.status === 400) {
                 showToast(
                     "error",
                     "Registration Failed",

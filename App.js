@@ -1,5 +1,6 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import * as Sentry from "@sentry/react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   Login,
@@ -20,6 +21,19 @@ import {
 import Toast from "react-native-toast-message";
 import { View, StatusBar } from "react-native";
 import MealDetailsPage from "./screens/MealDetailsPage";
+
+
+Sentry.init({
+  dsn: "https://973df241877ce7414eb140408eb39dba@o4506988063621120.ingest.us.sentry.io/4507383862132736",
+  // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+  // We recommend adjusting this value in production.
+  tracesSampleRate: 1.0,
+  _experiments: {
+    // profilesSampleRate is relative to tracesSampleRate.
+    // Here, we'll capture profiles for 100% of transactions.
+    profilesSampleRate: 1.0,
+  },
+});
 
 const Stack = createNativeStackNavigator();
 

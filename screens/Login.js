@@ -44,7 +44,7 @@ const Login = ({ navigation }) => {
       // Navigate to the home page or any other action needed
       navigation.navigate('MealSelectionPage');
     } catch (error) {
-      console.log('Error logging in:', error);
+      // console.log('Error logging in:', error);
 
       // Show error message
       showToast('error', 'Login Failed', 'Invalid email or password. Please try again.');
