@@ -171,9 +171,24 @@ const HomePage = ({ route }) => {
       "Saturday",
     ];
     let day = days[selectedDate.getDay()];
+    const updatedSelectedItems = selectedItems.map(item => item);
+    if(updatedSelectedItems.includes("Morning snack")){
+      const findMSnackIndex = updatedSelectedItems.findIndex((item)=> item === 'Morning snack')
+      if(findMSnackIndex>-1){
+        updatedSelectedItems[findMSnackIndex] = 'Snack 1'
+      }
+
+    }
+    if(updatedSelectedItems.includes("Afternoon snack")){
+      const findASnackIndex = updatedSelectedItems.findIndex((item)=> item === 'Afternoon snack')
+      if(findASnackIndex>-1){
+        updatedSelectedItems[findASnackIndex] = 'Snack 2'
+      }
+
+    }
     const payload = {
       username: userData.user.username,
-      mealType: selectedItems,
+      mealType: updatedSelectedItems,
       day: day,
     };
     try {
@@ -189,6 +204,12 @@ const HomePage = ({ route }) => {
             des = `${des}\n${item.name}-${item.quantity}`;
           });
           data.description=des
+          if(data.Meal === 'Snack 1'){
+            data.Meal = 'Morning snack'
+          }else if(data.Meal === 'Snack 2'){
+            data.Meal = 'Afternoon snack'
+          }
+
           return data
         });
         setMealList(updateData);

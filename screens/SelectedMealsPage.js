@@ -22,7 +22,7 @@ const showToast = (type, text1, text2) => {
 const SelectedMealsPage = ({ route }) => {
   const navigation = useNavigation();
   const { selectedItems } = route.params;
-  const foodgroupList = ["Breakfast","Morning snack", "Lunch", "Afternoon snack", "Dinner", "Evening snack"]
+  const foodgroupList = ["Breakfast","Morning snack", "Lunch", "Afternoon snack", "Dinner"]
   // Function to navigate to the home page
   const navigateToHomePage = () => {
     navigation.navigate("HomePage", {

@@ -18,7 +18,6 @@ const MealDetailsPage = ({ route }) => {
   const [mealList, setMealList] = useState([]);
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [mealKey, setMealKey] = useState(meal.Meal);
-
   const [isAlternativeVisible, setAlternativeVisible] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const navigation = useNavigation();
@@ -56,9 +55,15 @@ const MealDetailsPage = ({ route }) => {
       "Saturday",
     ];
     let day = days[currentDate.getDay()];
+    let updateMeal = mealKey
+    if(updateMeal === 'Morning snack'){
+      updateMeal='Snack 1'
+    }else if(updateMeal === 'Afternoon snack' ){
+      updateMeal='Snack 2'
+    }
     const payload = {
       username: userData.user.username,
-      mealType: [mealKey],
+      mealType: [updateMeal],
       day: day,
     };
     try {
@@ -68,7 +73,13 @@ const MealDetailsPage = ({ route }) => {
       );
       if (response.data.success) {
         setMealList(response.data.data);
-        setSelectedMeal(response.data.data[0]);
+        let selectData = response.data.data[0]
+        if(selectData.Meal ==='Snack 1'){
+          selectData.Meal='Morning snack'
+        }else if(selectData.Meal ==='Snack 2'){
+          selectData.Meal='Afternoon snack'
+        }
+        setSelectedMeal(selectData);
       } else {
         showToast("error", response.data.error);
         setMealList([]);
@@ -89,8 +100,13 @@ const MealDetailsPage = ({ route }) => {
       <TouchableOpacity
         key={index}
         onPress={() => {
-          // navigation.navigate(option);
-          setMealKey(option);
+          let selectMealOption = option
+          if(option ==='Morning snack'){
+            selectMealOption='Snack 1'
+          }else if(option ==='Afternoon snack'){
+            selectMealOption='Snack 2'
+          }
+          setMealKey(selectMealOption);
         }}
         style={styles.mealOption}
       >

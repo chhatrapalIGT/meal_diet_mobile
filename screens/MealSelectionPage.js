@@ -20,7 +20,7 @@ const showToast = (type, text1, text2) => {
 };
 const MealSelectionPage = () => {
   const navigation = useNavigation();
-  const foodgroupList =["Breakfast","Morning snack", "Lunch", "Afternoon snack", "Dinner", "Evening snack"]
+  const foodgroupList =["Breakfast","Morning snack", "Lunch", "Afternoon snack", "Dinner"]
 
   // const [foodgroupList, setFoodgroupList] = useState(["Breakfast","Morning snack", "Lunch", "Afternoon snack", "Dinner", "Evening snack"]);
 

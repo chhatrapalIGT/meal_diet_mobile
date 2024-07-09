@@ -104,6 +104,12 @@ const Signup = ({ navigation }) => {
                     "Registration Failed",
                     error.response.data.message
                 );
+            } else if(error?.response?.status === 500){
+                showToast(
+                    "error",
+                    "Registration Failed",
+                    error.response.data.message
+                );
             } else {
                 showToast(
                     "error",
