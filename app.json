@@ -2,7 +2,7 @@
   "expo": {
     "name": "Mind-Diet",
     "slug": "LOGIN-REGISTER-UI",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,7 +16,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.rashmi19.LOGINREGISTERUI"
+      "bundleIdentifier": "com.rashmi19.LOGINREGISTERUI",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
