@@ -9,7 +9,6 @@ import LunchPage from "./LunchPage";
 import AfternoonSnackPage from "./AfternoonSnackPage";
 import EveningSnackPage from "./EveningSnackPage";
 import DinnerPage from "./DinnerPage";
-import Feedback from "./Feedback";
 import MealSelectionPage from "./MealSelectionPage";
 import SelectedMealsPage from "./SelectedMealsPage"
 
@@ -28,7 +27,6 @@ export {
     AfternoonSnackPage,
     EveningSnackPage,
     DinnerPage,
-    Feedback,
     MealSelectionPage,
     SelectedMealsPage,
    

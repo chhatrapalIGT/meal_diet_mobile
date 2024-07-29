@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -6,19 +6,33 @@ import {
     Image,
     TouchableOpacity,
     ScrollView,
+    Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
-import axios from "axios";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { emailValidation } from "../utils/validation";
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { RFPercentage } from "react-native-responsive-fontsize";
+import { useNavigation } from "@react-navigation/native";
+import { getUrl } from "../Network/url";
+import { post } from "../Network/request";
 
-const Login = ({ navigation }) => {
+const Login = () => {
+    const navigation  = useNavigation();
+    const { navigate } = navigation
     const [isPasswordShown, setIsPasswordShown] = useState(false);
     const [email, setEmail] = useState("");
+    const [emailErr, setEmailErr] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordErr, setPasswordErr] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const showToast = (type, text1, text2) => {
         Toast.show({
@@ -29,76 +43,127 @@ const Login = ({ navigation }) => {
         });
     };
 
+    const handleTextInputChange = (value, type) => {
+        switch (type) {
+            case "email":
+                if (value === "") {
+                    setEmail("");
+                    setEmailErr("Email address is required");
+                } else if (emailValidation(email)) {
+                    setEmailErr("Please enter valid email address");
+                    setEmail(value);
+                } else {
+                    setEmailErr("");
+                    setEmail(value);
+                }
+                break;
+            case "password":
+                if (value === "") {
+                    setPassword("");
+                    setPasswordErr("Password is required");
+                } else {
+                    setPasswordErr("");
+                    setPassword(value);
+                }
+                break;
+            default:
+                break;
+        }
+    };
+    const isValidateForm = () => {
+        let isValid = true;
+        if (email === "") {
+            setEmailErr("Email address is required");
+            isValid = false;
+        } else if (emailValidation(email)) {
+            setEmailErr("Please enter valid email address");
+            isValid = false;
+        }
+        if (password === "") {
+            setPasswordErr("Password is required");
+            isValid = false;
+        }
+        return isValid;
+    };
+
     const handleLogin = async () => {
-        try {
-            // Perform validation if needed
-
-            const userData = {
-                username: email,
-                password: password,
-            };
-
-            const response = await axios.post(
-                "http://209.97.132.213:3000/auth/login",
-                userData
-            );
-
-            console.log("Login successful:", response.data);
-            await AsyncStorage.setItem(
-                "userData",
-                JSON.stringify(response.data)
-            );
-
-            // Show success message
-            showToast(
-                "success",
-                "Login Successful",
-                "You have successfully logged in."
-            );
-
-            // Navigate to the home page or any other action needed
-            navigation.navigate("MealSelectionPage");
-        } catch (error) {
-            // console.log('Error logging in:', error);
-
-            // Show error message
-            if (error?.response?.status === 400) {
-                showToast(
-                    "error",
-                    "Registration Failed",
-                    error.response.data.message
-                );
-            } else if (error?.response?.status === 500) {
-                showToast(
-                    "error",
-                    "Registration Failed",
-                    error.response.data.message
-                );
-            } else {
-                showToast(
-                    "error",
-                    "Login Failed",
-                    "Invalid email or password. Please try again."
-                );
+        const isValid = isValidateForm();
+        if (isValid) {
+            try {
+                setIsLoading(true);
+                const userData = {
+                    email: email.toLowerCase(),
+                    password: password,
+                };
+                const url = getUrl("login");
+                const res = await post(url, userData);
+                const { success, data, message } = res;
+                if (success) {
+                    setIsLoading(false);
+                    await AsyncStorage.setItem(
+                        "userToken",
+                        JSON.stringify(data.authToken)
+                    );
+                    showToast("success", message);
+                    setTimeout(() => {
+                        navigate("MealSelectionPage");
+                    }, 1000);
+                    setEmailErr("");
+                    setEmail("");
+                    setPassword("");
+                    setPasswordErr("");
+                } else {
+                    setIsLoading(false);
+                    showToast("error", message);
+                }
+            } catch (error) {
+                setIsLoading(false);
+                showToast("error", "Internal server error.");
             }
         }
     };
+    useEffect(() => {
+        const unsubscribe = navigation.addListener("focus", () => {
+            setEmail("");
+            setEmailErr("");
+            setPassword("");
+            setPasswordErr("");
+        });
 
+        return unsubscribe;
+    }, [navigation]);
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-            <View style={{ flex: 1, marginHorizontal: 22 }}>
+            <View style={{ flex: 1 }}>
                 <ScrollView>
-                    <Image
-                        source={require("../assets/Login.jpg")}
-                        style={{ width: "100%", height: 500, marginBottom: 20 }}
-                    />
+                    <View
+                        style={{
+                            width: "100%",
+                            height: hp(63.8),
+                            marginBottom: hp(2.55),
+                        }}
+                    >
+                        <Image
+                            resizeMode="cover"
+                            source={require("../assets/Login.jpg")}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                            }}
+                        />
+                    </View>
 
-                    <View style={{ marginBottom: 12 }}>
+                    <View
+                        style={{
+                            marginBottom: hp(1.55),
+                            marginHorizontal: wp(5.7),
+                        }}
+                    >
                         <Text
                             style={{
-                                fontSize: 16,
-                                fontWeight: "400",
-                                marginVertical: 8,
+                                fontSize: RFPercentage(2.1),
+                                fontWeight: 400,
+                                marginVertical: hp(1),
                             }}
                         >
                             Email-ID
@@ -107,13 +172,13 @@ const Login = ({ navigation }) => {
                         <View
                             style={{
                                 width: "100%",
-                                height: 48,
+                                height: hp(6.15),
                                 borderColor: COLORS.black,
                                 borderWidth: 1,
                                 borderRadius: 8,
                                 alignItems: "center",
                                 justifyContent: "center",
-                                paddingLeft: 22,
+                                paddingLeft: wp(5.7),
                             }}
                         >
                             <TextInput
@@ -124,17 +189,34 @@ const Login = ({ navigation }) => {
                                     width: "100%",
                                 }}
                                 value={email}
-                                onChangeText={(text) => setEmail(text)}
+                                onChangeText={(text) =>
+                                    handleTextInputChange(text, "email")
+                                }
                             />
                         </View>
+                        {emailErr && (
+                            <Text
+                                style={{
+                                    color: COLORS.error,
+                                    fontSize: RFPercentage(1.6),
+                                }}
+                            >
+                                {emailErr}
+                            </Text>
+                        )}
                     </View>
 
-                    <View style={{ marginBottom: 12 }}>
+                    <View
+                        style={{
+                            marginBottom: hp(1.55),
+                            marginHorizontal: wp(5.7),
+                        }}
+                    >
                         <Text
                             style={{
-                                fontSize: 16,
-                                fontWeight: "400",
-                                marginVertical: 8,
+                                fontSize: RFPercentage(2.1),
+                                fontWeight: 400,
+                                marginVertical: hp(1),
                             }}
                         >
                             Password
@@ -143,13 +225,13 @@ const Login = ({ navigation }) => {
                         <View
                             style={{
                                 width: "100%",
-                                height: 48,
+                                height: hp(6.15),
                                 borderColor: COLORS.black,
                                 borderWidth: 1,
                                 borderRadius: 8,
                                 alignItems: "center",
                                 justifyContent: "center",
-                                paddingLeft: 22,
+                                paddingLeft: wp(5.7),
                             }}
                         >
                             <TextInput
@@ -160,7 +242,9 @@ const Login = ({ navigation }) => {
                                     width: "100%",
                                 }}
                                 value={password}
-                                onChangeText={(text) => setPassword(text)}
+                                onChangeText={(text) =>
+                                    handleTextInputChange(text, "password")
+                                }
                             />
 
                             <TouchableOpacity
@@ -169,7 +253,7 @@ const Login = ({ navigation }) => {
                                 }
                                 style={{
                                     position: "absolute",
-                                    right: 12,
+                                    right: wp(3.15),
                                 }}
                             >
                                 {isPasswordShown ? (
@@ -187,9 +271,82 @@ const Login = ({ navigation }) => {
                                 )}
                             </TouchableOpacity>
                         </View>
+                        {passwordErr && (
+                            <Text
+                                style={{
+                                    color: COLORS.error,
+                                    fontSize: RFPercentage(1.6),
+                                }}
+                            >
+                                {passwordErr}
+                            </Text>
+                        )}
+                    </View>
+                    <View
+                        style={{
+                            marginHorizontal: wp(5.7),
+                            marginBottom: 20,
+
+                            flexDirection: "row",
+                        }}
+                    >
+                        {/* <Text
+                            style={{
+                                fontSize: RFPercentage(2.1),
+                                fontWeight: 400,
+                            }}
+                        >
+                            Forgot Password?
+                        </Text> */}
+                        <Pressable onPress={() => navigate("ForgotPassword")}>
+                            <Text
+                                style={{
+                                    fontSize: RFPercentage(2.1),
+                                    color: COLORS.primary,
+                                    fontWeight: "bold",
+                                    marginLeft: 6,
+                                }}
+                            >
+                                Forgot Password?
+                            </Text>
+                        </Pressable>
                     </View>
 
-                    <Button title="Login" filled onPress={handleLogin} />
+                    <Button
+                        style={{ marginHorizontal: wp(5.7), marginBottom: 10 }}
+                        title="Login"
+                        filled
+                        onPress={handleLogin}
+                        disabled={isLoading}
+                    />
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            marginVertical: 22,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontSize: RFPercentage(2.1),
+                                color: COLORS.black,
+                            }}
+                        >
+                            Don't have an account?
+                        </Text>
+                        <Pressable onPress={() => navigate("Signup")}>
+                            <Text
+                                style={{
+                                    fontSize: RFPercentage(2.1),
+                                    color: COLORS.primary,
+                                    fontWeight: "bold",
+                                    marginLeft: 6,
+                                }}
+                            >
+                                Join Now
+                            </Text>
+                        </Pressable>
+                    </View>
                 </ScrollView>
             </View>
         </SafeAreaView>

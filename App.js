@@ -14,13 +14,14 @@ import {
   AfternoonSnackPage,
   EveningSnackPage,
   DinnerPage,
-  Feedback,
   MealSelectionPage,
   SelectedMealsPage,
 } from "./screens";
 import Toast from "react-native-toast-message";
 import { View, StatusBar } from "react-native";
 import MealDetailsPage from "./screens/MealDetailsPage";
+import ChangePassowrdPage from "./screens/ChangePassowrd";
+import ForgotPassword from "./screens/ForgotPassword";
 
 
 Sentry.init({
@@ -136,14 +137,6 @@ const App = () => {
           />
 
           <Stack.Screen
-            name="Feedback"
-            component={Feedback}
-            options={{
-              headerShown: false,
-            }}
-          />
-
-          <Stack.Screen
             name="MealSelectionPage"
             component={MealSelectionPage}
             options={{
@@ -154,6 +147,20 @@ const App = () => {
           <Stack.Screen
             name="SelectedMealsPage"
             component={SelectedMealsPage}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="ChangePassowrd"
+            component={ChangePassowrdPage}
+            options={{
+              headerShown: false,
+            }}
+          />
+           <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
             options={{
               headerShown: false,
             }}

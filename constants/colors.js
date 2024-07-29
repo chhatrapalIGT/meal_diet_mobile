@@ -23,7 +23,8 @@ const COLORS = {
      Slate: "#708090",
      Turquoise: "#40E0D0",
      Indigo: "#4B0082",
-     Peach: "#FFDAB9"
+     Peach: "#FFDAB9",
+     error:'red'
      
      
  }

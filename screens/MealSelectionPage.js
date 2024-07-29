@@ -1,142 +1,163 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    ScrollView,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-// import axios from "axios";
-import Toast from "react-native-toast-message";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import COLORS from "../constants/colors";
+import { RFPercentage } from "react-native-responsive-fontsize";
+import { BackHandler } from "react-native";
 
-const showToast = (type, text1, text2) => {
-  Toast.show({
-    type: type, 
-    text1: text1,
-    text2: text2,
-    position: 'top',
-  });
-};
 const MealSelectionPage = () => {
-  const navigation = useNavigation();
-  const foodgroupList =["Breakfast","Morning snack", "Lunch", "Afternoon snack", "Dinner"]
+    const navigation = useNavigation();
+    const foodgroupList = [
+        "Breakfast",
+        "Morning snack",
+        "Lunch",
+        "Afternoon snack",
+        "Dinner",
+    ];
 
-  // const [foodgroupList, setFoodgroupList] = useState(["Breakfast","Morning snack", "Lunch", "Afternoon snack", "Dinner", "Evening snack"]);
+    // Initialize state to keep track of selected items for each meal
+    const [selectedFoodGroupList, setSelectedFoodGroupList] = useState([]);
+    const [selectedMealsError, setSelectedMealsError] = useState("");
 
-  // Initialize state to keep track of selected items for each meal
-  const [selectedFoodGroupList, setSelectedFoodGroupList] = useState([]);
+    // Function to navigate to the next page with accumulated selected items
+    const navigateToSelectedMealsPage = () => {
+        if (selectedFoodGroupList.length > 0) {
+            setSelectedMealsError("");
+            navigation.navigate("SelectedMealsPage", {
+                selectedItems: selectedFoodGroupList,
+            });
+        } else {
+            setSelectedMealsError("Please select any one meal");
+        }
+    };
 
-  // Function to navigate to the next page with accumulated selected items
-  const navigateToSelectedMealsPage = () => {
-    navigation.navigate("SelectedMealsPage", {
-      selectedItems: selectedFoodGroupList,
-    });
-  };
+    // Function to update selected items for a specific meal
+    const handleMealButtonPress = (meal) => {
+        setSelectedMealsError("");
+        if (selectedFoodGroupList.includes(meal)) {
+            const filterData = selectedFoodGroupList.filter(
+                (item) => item !== meal
+            );
+            setSelectedFoodGroupList(filterData);
+        } else {
+            setSelectedFoodGroupList([...selectedFoodGroupList, meal]);
+        }
+    };
 
-  // Function to update selected items for a specific meal
-  const handleMealButtonPress = (meal) => {
-    if (selectedFoodGroupList.includes(meal)) {
-      const filterData = selectedFoodGroupList.filter((item) => item !== meal);
-      setSelectedFoodGroupList(filterData);
-    } else {
-      setSelectedFoodGroupList([...selectedFoodGroupList, meal]);
-    }
-  };
+    useFocusEffect(
+        useCallback(() => {
+            const backAction = () => {
+                BackHandler.exitApp();
+                return true; // Prevent default back action
+            };
 
-  // const getFoodGroupData = async () => {
-  //   try {
-  //     const response = await axios.post(
-  //       "http://209.97.132.213:3000/auth/findAllGroupArray"
-  //     );
-  //     if(response.data.success){
-  //       // setFoodgroupList(response.data.data)
-  //     }else{
-  //       showToast('error', response.data.message);
-  //     }
+            const backHandler = BackHandler.addEventListener(
+                "hardwareBackPress",
+                backAction
+            );
 
-  //   } catch (error) {
-  //     console.log("Error logging in:", error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getFoodGroupData();
-  // }, []);
+            return () => backHandler.remove();
+        }, [])
+    );
+    return (
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <View style={{ marginHorizontal: wp(5.7), marginTop: 30 }}>
+                <Text style={styles.title}>
+                    Which meals do you usually have?
+                </Text>
+                <Text style={styles.subtitle}>Select the meals you have</Text>
 
-  return (
-    <ScrollView contentContainerStyle={styles.scrollViewContent}>
-      <Text style={styles.title}>Which meals do you usually have?</Text>
-      <Text style={styles.subtitle}>Select the meals you have</Text>
-
-      {foodgroupList.map((meal, index) => (
-        <TouchableOpacity
-          key={index}
-          style={[
-            styles.mealButton,
-            {
-              backgroundColor: selectedFoodGroupList.includes(meal)
-                ? "blue"
-                : "transparent",
-            },
-          ]}
-          onPress={() => handleMealButtonPress(meal)}
-        >
-          <Text style={styles.mealButtonText}>{meal}</Text>
-        </TouchableOpacity>
-      ))}
-
-      <TouchableOpacity
-        style={styles.nextButton}
-        onPress={navigateToSelectedMealsPage}
-      >
-        <Text style={styles.buttonText}>Next</Text>
-      </TouchableOpacity>
-    </ScrollView>
-  );
+                {foodgroupList.map((meal, index) => (
+                    <TouchableOpacity
+                        key={index}
+                        style={[
+                            styles.mealButton,
+                            {
+                                backgroundColor: selectedFoodGroupList.includes(
+                                    meal
+                                )
+                                    ? "blue"
+                                    : "transparent",
+                            },
+                        ]}
+                        onPress={() => handleMealButtonPress(meal)}
+                    >
+                        <Text style={styles.mealButtonText}>{meal}</Text>
+                    </TouchableOpacity>
+                ))}
+                {selectedMealsError && (
+                    <Text
+                        style={{
+                            color: COLORS.error,
+                            fontSize: RFPercentage(1.6),
+                        }}
+                    >
+                        {selectedMealsError}
+                    </Text>
+                )}
+                <TouchableOpacity
+                    style={styles.nextButton}
+                    onPress={navigateToSelectedMealsPage}
+                >
+                    <Text style={styles.buttonText}>Next</Text>
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
-  mealButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "transparent",
-    borderColor: "blue",
-    borderWidth: 1,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-  },
-  mealButtonText: {
-    fontSize: 18,
-    color: "black",
-  },
-  nextButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: "blue",
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 20,
-  },
+    container: {
+        flex: 1,
+        padding: 20,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: "bold",
+        marginBottom: 10,
+    },
+    subtitle: {
+        fontSize: 16,
+        marginBottom: 20,
+    },
+    mealButton: {
+        width: "100%",
+        height: 50,
+        backgroundColor: "transparent",
+        borderColor: "blue",
+        borderWidth: 1,
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        marginVertical: 10,
+    },
+    mealButtonText: {
+        fontSize: 18,
+        color: "black",
+    },
+    nextButton: {
+        marginTop: 20,
+        padding: 10,
+        backgroundColor: "blue",
+        borderRadius: 8,
+        alignItems: "center",
+    },
+    buttonText: {
+        color: "white",
+        fontSize: 20,
+    },
 });
 
 export default MealSelectionPage;

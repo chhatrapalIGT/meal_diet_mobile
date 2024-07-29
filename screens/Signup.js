@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -7,29 +7,130 @@ import {
     TextInput,
     TouchableOpacity,
     ScrollView,
+    StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+import { RFPercentage } from "react-native-responsive-fontsize";
+
 import COLORS from "../constants/colors";
 import Checkbox from "expo-checkbox";
-import TermsAndConditions from "./TermsAndConditions";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
-import axios from "axios";
 import Toast from "react-native-toast-message";
+import { emailValidation, passwordValidation } from "../utils/validation";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { getUrl } from "../Network/url";
+import { post } from "../Network/request";
 
-const Signup = ({ navigation }) => {
+const styles = StyleSheet.create({
+    signupMainConatiner: {
+        flex: 1,
+        backgroundColor: COLORS.white,
+    },
+    signUpBannerContainer: {
+        height: hp(16.55),
+        marginHorizontal: wp(6.5),
+        marginBottom: 1,
+    },
+    signUpBannerImg: {
+        width: "100%",
+        height: "100%",
+        aspectRatio: 2.5,
+    },
+    signUpHeadingContainer: {
+        marginVertical: hp(2.8),
+        marginHorizontal: wp(6.2),
+    },
+    signUpHeadingText: {
+        fontSize: RFPercentage(2.9),
+        fontWeight: "bold",
+        marginVertical: hp(1.55),
+        color: COLORS.black,
+    },
+    signUpHeadingText1: { fontSize: RFPercentage(2.1), color: COLORS.black },
+    inputMainContainer: { marginBottom: hp(1.55), marginHorizontal: wp(6.2) },
+    inputlabelText: {
+        fontSize: RFPercentage(2.1),
+        fontWeight: "400",
+        marginVertical: hp(1),
+    },
+    inputView: {
+        width: "100%",
+        height: hp(6.15),
+        borderColor: COLORS.black,
+        borderWidth: 1,
+        borderRadius: 8,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingLeft: wp(5.7),
+    },
+    inputStyle: {
+        width: "100%",
+    },
+    passwordView: { position: "absolute", right: wp(3.15) },
+    genderMainBtn: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: COLORS.primary,
+        borderRadius: 8,
+        padding: 10,
+        marginRight: 10,
+    },
+    termAndConditionMainConatiner: {
+        marginBottom: 10,
+        marginHorizontal: wp(6.2),
+    },
+    termAndConditionConatiner: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    termAndConditionConatinerCheckbox: { marginRight: 8 },
+    termAndConditionConatinerLinkView: {
+        flexDirection: "row",
+        marginVertical: 6,
+        alignItems: "left",
+    },
+    signupBtn: { marginHorizontal: wp(6.2) },
+    loginLinkMainView: {
+        flexDirection: "row",
+        justifyContent: "center",
+        marginVertical: 22,
+    },
+    errorText: {
+        color: COLORS.error,
+        fontSize: RFPercentage(1.6),
+    },
+});
+const Signup = () => {
+    const navigation = useNavigation();
+    const { navigate } = navigation;
+    const route = useRoute();
+    const { isTermAndCondition } = route.params || "";
     const [idNumber, setIdNumber] = useState("");
-    // const [Fullname, setFullname] = useState('');
     const [gender, setGender] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const [confirmPasswordError, setConfirmPasswordError] = useState("");
+    const [genderError, setGenderError] = useState("");
+    const [usernameError, setUsernameError] = useState("");
     const [isPasswordShown, setIsPasswordShown] = useState(false);
+    const [isConfirmPasswordShown, setIsConfirmPasswordShown] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
+    const [isTermAndConditionErr, setIsTermAndConditionErr] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleTermsLinkPress = () => {
-        navigation.navigate("TermsAndConditions");
+        navigate("TermsAndConditions");
     };
 
     const showToast = (type, text1, text2) => {
@@ -40,101 +141,148 @@ const Signup = ({ navigation }) => {
             position: "top",
         });
     };
-
-    const handleSignUp = async () => {
-        // Reset error messages
-        setEmailError("");
-        setPasswordError("");
-
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            setEmailError("Invalid email format");
-            return;
+    const handleTextInputChange = (value, type) => {
+        switch (type) {
+            case "username":
+                if (value === "") {
+                    setUsername("");
+                    setUsernameError("Name is required");
+                } else {
+                    setUsernameError("");
+                    setUsername(value);
+                }
+                break;
+            case "email":
+                if (value === "") {
+                    setEmail("");
+                    setEmailError("Email address is required");
+                } else if (emailValidation(email)) {
+                    setEmailError("Please enter valid email address");
+                    setEmail(value);
+                } else {
+                    setEmailError("");
+                    setEmail(value);
+                }
+                break;
+            case "password":
+                if (value === "") {
+                    setPassword("");
+                    setPasswordError("Password is required");
+                } else if (passwordValidation(value)) {
+                    setPassword(value);
+                    setPasswordError(
+                        "Password must be atleast 8 characters, contain 2 numbers, and have 1 special character"
+                    );
+                } else {
+                    setPasswordError("");
+                    setPassword(value);
+                }
+                break;
+            case "confirmPassword":
+                if (value === "") {
+                    setConfirmPasswordError("Confirm Password is required");
+                    setConfirmPassword("");
+                } else if (value !== password) {
+                    setConfirmPasswordError(
+                        "Password and Confirm Password not same"
+                    );
+                    setConfirmPassword(value);
+                } else {
+                    setConfirmPasswordError("");
+                    setConfirmPassword(value);
+                }
+                break;
+            default:
+                break;
+        }
+    };
+    const isValidateForm = () => {
+        let isValid = true;
+        if (username === "") {
+            setUsernameError("Name is required");
+            isValid = false;
         }
 
-        // Validate password complexity
-        const passwordRegex =
-            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-        if (!passwordRegex.test(password)) {
+        if (email === "") {
+            setEmailError("Email address is required");
+            isValid = false;
+        } else if (emailValidation(email)) {
+            setEmailError("Please enter valid email address");
+            isValid = false;
+        }
+        if (password === "") {
+            setPasswordError("Password is required");
+            isValid = false;
+        } else if (passwordValidation(password)) {
             setPasswordError(
                 "Password must be atleast 8 characters, contain 2 numbers, and have 1 special character"
             );
-            return;
+            isValid = false;
         }
-
-        try {
-            const userData = {
-                IDnumber: idNumber,
-                // Fullname:Fullname,
-                gender: gender,
-                username: email,
-                password: password,
-                termsAndConditions: isChecked,
-            };
-            console.log("SignUp Payload:", userData);
-
-            const response = await axios.post(
-                "http://209.97.132.213:3000/auth/register",
-                userData
+        if (confirmPassword === "") {
+            setConfirmPasswordError("Confirm Password is required");
+            isValid = false;
+        } else if (confirmPassword !== password) {
+            setConfirmPasswordError("Password and Confirm Password not same");
+            isValid = false;
+        }
+        if (gender === "") {
+            setGenderError("Gender is required");
+            isValid = false;
+        }
+        if (!isChecked) {
+            setIsTermAndConditionErr(
+                "Terms and conditions. Please fill them out"
             );
-
-            console.log(
-                "User registration successful:",
-                response,
-                response.data
-            );
-
-            // navigation.navigate('HomePage', { gender: gender });
-
-            // Show success message
-            showToast(
-                "success",
-                "Registration Successful",
-                "You have successfully registered. Now you can log in."
-            );
-            navigation.navigate("Login");
-            //navigation.navigate('HomePage', { gender: gender });
-        } catch (error) {
-            // console.log("Error signing up:", error);
-
-            if (error?.response?.status === 400) {
-                showToast(
-                    "error",
-                    "Registration Failed",
-                    error.response.data.message
-                );
-            } else if(error?.response?.status === 500){
-                showToast(
-                    "error",
-                    "Registration Failed",
-                    error.response.data.message
-                );
-            } else {
-                showToast(
-                    "error",
-                    "Registration Failed",
-                    "There was an error during registration. Please try again."
-                );
+            isValid = false;
+        }
+        return isValid;
+    };
+    const handleSignUp = async () => {
+        const isValid = isValidateForm();
+        if (isValid) {
+            try {
+                setIsLoading(true);
+                const userData = {
+                    IDnumber: idNumber,
+                    email: email.toLowerCase(),
+                    gender: gender,
+                    username: username,
+                    password: password,
+                    confirmPassword: confirmPassword,
+                    termsAndConditions: isChecked,
+                };
+                const url = getUrl("register");
+                const res = await post(url, userData);
+                const { success, message } = res;
+                if (success) {
+                    setIsLoading(false);
+                    showToast("success", message);
+                    setTimeout(() => {
+                        navigate("Login");
+                    }, 1000);
+                } else {
+                    setIsLoading(false);
+                    showToast("error", message);
+                }
+            } catch (error) {
+                setIsLoading(false);
+                showToast("error", "Internal server error.");
             }
-            // Show error message
         }
     };
 
     const renderGenderButton = (value, label) => (
         <TouchableOpacity
             style={{
-                flexDirection: "row",
-                alignItems: "center",
-                borderWidth: 1,
-                borderColor: COLORS.primary,
-                borderRadius: 8,
-                padding: 10,
-                marginRight: 10,
+                ...styles.genderMainBtn,
                 backgroundColor:
                     gender === value ? COLORS.primary : "transparent",
             }}
-            onPress={() => setGender(value)}
+            onPress={() => {
+                setGender(value);
+                setGenderError("");
+            }}
         >
             <Text
                 style={{
@@ -145,284 +293,262 @@ const Signup = ({ navigation }) => {
             </Text>
         </TouchableOpacity>
     );
+   
+    useEffect(() => {
+        const unsubscribe = navigation.addListener("focus", () => {
+            if (isTermAndCondition === undefined) {
+                setIdNumber("");
+                setUsername("");
+                setUsernameError("");
+                setEmail("");
+                setEmailError("");
+                setPassword("");
+                setPasswordError("");
+                setConfirmPassword("");
+                setConfirmPasswordError("");
+                setGender("");
+                setGenderError("");
+                setIsChecked(false);
+                setIsTermAndConditionErr("");
+            } else {
+                setIsChecked(isTermAndCondition);
+                setIsTermAndConditionErr("");
+            }
+        });
+
+        return unsubscribe;
+    }, [navigation, isTermAndCondition]);
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
+        <SafeAreaView style={styles.signupMainConatiner}>
             <ScrollView>
-                <View style={{ flex: 1, marginHorizontal: 25 }}>
-                    <Image
-                        source={require("../assets/SignupPageimage.png")}
-                        style={{
-                            flex: 1,
-                            width: "100%",
-                            height: undefined,
-                            aspectRatio: 2.6,
-                            marginBottom: 1,
-                        }}
-                    />
-
-                    <View style={{ marginVertical: 22 }}>
-                        <Text
-                            style={{
-                                fontSize: 22,
-                                fontWeight: "bold",
-                                marginVertical: 12,
-                                color: COLORS.black,
-                            }}
-                        >
+                <View style={{ flex: 1 }}>
+                    <View style={styles.signUpBannerContainer}>
+                        <Image
+                            source={require("../assets/SignupPageimage.png")}
+                            resizeMode="cover"
+                            style={styles.signUpBannerImg}
+                        />
+                    </View>
+                    <View style={styles.signUpHeadingContainer}>
+                        <Text style={styles.signUpHeadingText}>
                             Create Account
                         </Text>
 
-                        <Text style={{ fontSize: 16, color: COLORS.black }}>
+                        <Text style={styles.signUpHeadingText1}>
                             Connect with your friend today!
                         </Text>
                     </View>
 
-                    <View style={{ marginBottom: 12 }}>
-                        <Text
-                            style={{
-                                fontSize: 16,
-                                fontWeight: "400",
-                                marginVertical: 8,
-                            }}
-                        >
-                            IDnumber
-                        </Text>
+                    <View style={styles.inputMainContainer}>
+                        <Text style={styles.inputlabelText}>IDnumber</Text>
 
-                        <View
-                            style={{
-                                width: "100%",
-                                height: 48,
-                                borderColor: COLORS.black,
-                                borderWidth: 1,
-                                borderRadius: 8,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                paddingLeft: 22,
-                            }}
-                        >
+                        <View style={styles.inputView}>
                             <TextInput
                                 placeholder="Enter your IDnumber"
                                 placeholderTextColor={COLORS.black}
                                 keyboardType="numeric"
-                                style={{
-                                    width: "80%",
-                                }}
+                                style={styles.inputStyle}
                                 value={idNumber}
                                 onChangeText={(text) => setIdNumber(text)}
                             />
                         </View>
                     </View>
 
-                    {/* <View style={{ marginBottom: 12 }}>
-          <Text style={{ fontSize: 16, fontWeight: '400', marginVertical: 8 }}>Fullname</Text>
+                    <View style={styles.inputMainContainer}>
+                        <Text style={styles.inputlabelText}>Name</Text>
 
-
-          <View
-            style={{
-              width: '100%',
-              height: 48,
-              borderColor: COLORS.black,
-              borderWidth: 1,
-              borderRadius: 8,
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingLeft: 22,
-            }}
-          >
-            <TextInput
-              placeholder="Enter your Full name"
-              placeholderTextColor={COLORS.black}
-            
-              style={{
-                width: '80%',
-              }}
-              value={Fullname}
-              onChangeText={(text) => setFullname(text)}
-            />
-          </View>
-        </View> */}
-
-                    <View style={{ marginBottom: 12 }}>
-                        <Text
-                            style={{
-                                fontSize: 16,
-                                fontWeight: "400",
-                                marginVertical: 8,
-                            }}
-                        >
-                            Gender
-                        </Text>
-                        <View style={{ flexDirection: "row" }}>
-                            {renderGenderButton("Male", "Male")}
-                            {renderGenderButton("Female", "Female")}
-                            {renderGenderButton("Others", "Others")}
+                        <View style={styles.inputView}>
+                            <TextInput
+                                placeholder="Enter your name"
+                                placeholderTextColor={COLORS.black}
+                                style={styles.inputStyle}
+                                value={username}
+                                onChangeText={(text) =>
+                                    handleTextInputChange(text, "username")
+                                }
+                            />
                         </View>
+                        {usernameError && (
+                            <Text style={styles.errorText}>
+                                {usernameError}
+                            </Text>
+                        )}
                     </View>
 
-                    <View style={{ marginBottom: 12 }}>
-                        <Text
-                            style={{
-                                fontSize: 16,
-                                fontWeight: "400",
-                                marginVertical: 8,
-                            }}
-                        >
-                            Email-ID
-                        </Text>
+                    <View style={styles.inputMainContainer}>
+                        <Text style={styles.inputlabelText}>Email-ID</Text>
 
-                        <View
-                            style={{
-                                width: "100%",
-                                height: 48,
-                                borderColor: COLORS.black,
-                                borderWidth: 1,
-                                borderRadius: 8,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                paddingLeft: 22,
-                            }}
-                        >
+                        <View style={styles.inputView}>
                             <TextInput
                                 placeholder="abc@mail.com"
                                 placeholderTextColor={COLORS.black}
                                 keyboardType="email-address"
-                                style={{
-                                    width: "100%",
-                                }}
+                                style={styles.inputStyle}
                                 value={email}
-                                onChangeText={(text) => {
-                                    setEmail(text);
-                                    setEmailError("");
-                                }}
+                                onChangeText={(text) =>
+                                    handleTextInputChange(text, "email")
+                                }
                             />
                         </View>
                         {emailError ? (
-                            <Text style={{ color: COLORS.error, fontSize: 12 }}>
-                                {emailError}
-                            </Text>
+                            <Text style={styles.errorText}>{emailError}</Text>
                         ) : null}
                     </View>
 
-                    <View style={{ marginBottom: 12 }}>
-                        <Text
-                            style={{
-                                fontSize: 16,
-                                fontWeight: "400",
-                                marginVertical: 8,
-                            }}
-                        >
-                            Password
-                        </Text>
+                    <View style={styles.inputMainContainer}>
+                        <Text style={styles.inputlabelText}>Password</Text>
 
-                        <View
-                            style={{
-                                width: "100%",
-                                height: 48,
-                                borderColor: COLORS.black,
-                                borderWidth: 1,
-                                borderRadius: 8,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                paddingLeft: 22,
-                            }}
-                        >
+                        <View style={styles.inputView}>
                             <TextInput
                                 placeholder="Enter your password"
                                 placeholderTextColor={COLORS.black}
-                                //secureTextEntry={true}
                                 secureTextEntry={!isPasswordShown}
-                                style={{
-                                    width: "100%",
-                                }}
+                                style={styles.inputStyle}
                                 value={password}
-                                onChangeText={(text) => {
-                                    setPassword(text);
-                                    setPasswordError("");
-                                }}
+                                onChangeText={(text) =>
+                                    handleTextInputChange(text, "password")
+                                }
                             />
                             <TouchableOpacity
                                 onPress={() =>
                                     setIsPasswordShown(!isPasswordShown)
                                 }
-                                style={{
-                                    position: "absolute",
-                                    right: 12,
-                                }}
+                                style={styles.passwordView}
                             >
-                                {isPasswordShown ? (
-                                    <Ionicons
-                                        name="eye-off"
-                                        size={24}
-                                        color={COLORS.black}
-                                    />
-                                ) : (
-                                    <Ionicons
-                                        name="eye"
-                                        size={24}
-                                        color={COLORS.black}
-                                    />
-                                )}
+                                <Ionicons
+                                    name={isPasswordShown ? "eye-off" : "eye"}
+                                    size={24}
+                                    color={COLORS.black}
+                                />
                             </TouchableOpacity>
                         </View>
                         {passwordError ? (
-                            <Text style={{ color: COLORS.error, fontSize: 12 }}>
+                            <Text style={styles.errorText}>
                                 {passwordError}
                             </Text>
                         ) : null}
                     </View>
-                    <View style={{display:'flex', flexDirection:'row',alignItems:'center',marginBottom:10}}>
-                        <Checkbox
-                            style={{ marginRight: 8 }}
-                            value={isChecked}
-                            onValueChange={setIsChecked}
-                            color={isChecked ? COLORS.primary : undefined}
-                        />
-                        <Pressable onPress={handleTermsLinkPress}>
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    marginVertical: 6,
-                                    alignItems: "left",
-                                }}
+                    <View style={styles.inputMainContainer}>
+                        <Text style={styles.inputlabelText}>
+                            Confirm Password
+                        </Text>
+
+                        <View style={styles.inputView}>
+                            <TextInput
+                                placeholder="Enter your confirm password"
+                                placeholderTextColor={COLORS.black}
+                                secureTextEntry={!isConfirmPasswordShown}
+                                style={styles.inputStyle}
+                                value={confirmPassword}
+                                onChangeText={(text) =>
+                                    handleTextInputChange(
+                                        text,
+                                        "confirmPassword"
+                                    )
+                                }
+                            />
+                            <TouchableOpacity
+                                onPress={() =>
+                                    setIsConfirmPasswordShown(
+                                        !isConfirmPasswordShown
+                                    )
+                                }
+                                style={styles.passwordView}
                             >
-                                <Text>
-                                    I agree to the{" "}
-                                    <Text
-                                        style={{
-                                            color: COLORS.primary,
-                                            textDecorationLine: "underline",
-                                        }}
-                                    >
-                                        terms and conditions
+                                <Ionicons
+                                    name={
+                                        isConfirmPasswordShown
+                                            ? "eye-off"
+                                            : "eye"
+                                    }
+                                    size={24}
+                                    color={COLORS.black}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        {confirmPasswordError && (
+                            <Text style={styles.errorText}>
+                                {confirmPasswordError}
+                            </Text>
+                        )}
+                    </View>
+                    <View style={styles.inputMainContainer}>
+                        <Text style={styles.inputlabelText}>Gender</Text>
+                        <View style={{ flexDirection: "row" }}>
+                            {renderGenderButton("Male", "Male")}
+                            {renderGenderButton("Female", "Female")}
+                            {renderGenderButton("Others", "Others")}
+                        </View>
+                        {genderError && (
+                            <Text style={styles.errorText}>{genderError}</Text>
+                        )}
+                    </View>
+                    <View style={styles.termAndConditionMainConatiner}>
+                        <View style={styles.termAndConditionConatiner}>
+                            <Checkbox
+                                style={styles.termAndConditionConatinerCheckbox}
+                                value={isChecked}
+                                onValueChange={() => {
+                                    setIsChecked(!isChecked);
+                                    setIsTermAndConditionErr("");
+                                }}
+                                color={isChecked ? COLORS.primary : undefined}
+                            />
+                            <Pressable onPress={handleTermsLinkPress}>
+                                <View
+                                    style={
+                                        styles.termAndConditionConatinerLinkView
+                                    }
+                                >
+                                    <Text>
+                                        I agree to the{" "}
+                                        <Text
+                                            style={{
+                                                color: COLORS.primary,
+                                                textDecorationLine: "underline",
+                                            }}
+                                        >
+                                            Terms and conditions
+                                        </Text>
                                     </Text>
-                                </Text>
-                            </View>
-                        </Pressable>
+                                </View>
+                            </Pressable>
+                        </View>
+                        {isTermAndConditionErr && (
+                            <Text style={styles.errorText}>
+                                {isTermAndConditionErr}
+                            </Text>
+                        )}
                     </View>
 
-                    <Button title="Signup" filled onPress={handleSignUp} />
+                    <Button
+                        style={styles.signupBtn}
+                        title="Signup"
+                        filled
+                        onPress={handleSignUp}
+                        disabled={isLoading}
+                    />
 
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            marginVertical: 22,
-                        }}
-                    >
-                        <Text style={{ fontSize: 16, color: COLORS.black }}>
-                            Already have an account
+                    <View style={styles.loginLinkMainView}>
+                        <Text
+                            style={{
+                                fontSize: RFPercentage(2.1),
+                                color: COLORS.black,
+                            }}
+                        >
+                            Already have an account?
                         </Text>
-                        <Pressable onPress={() => navigation.navigate("Login")}>
+                        <Pressable onPress={() => navigate("Login")}>
                             <Text
                                 style={{
-                                    fontSize: 16,
+                                    fontSize: RFPercentage(2.1),
                                     color: COLORS.primary,
                                     fontWeight: "bold",
                                     marginLeft: 6,
                                 }}
                             >
-                                Login
+                                Login Now
                             </Text>
                         </Pressable>
                     </View>
