@@ -1,0 +1,28 @@
+export const images = {
+    welcomeBGImage: require("./welcomeBG.png"),
+    logo: require("./logo.png"),
+    closedEyeIcon: require("./closed_eye_icon.png"),
+    openEyeIcon: require("./open_eye_icon.png"),
+    mailIcon: require("./mail_icon.png"),
+    passwordIcon: require("./password_ icon.png"),
+    signupBGImage: require("./signupBG.png"),
+    personIcon: require("./personIcon.png"),
+    maleSymbol: require("./maleSymbol.png"),
+    femaleSymbol: require("./femaleSymbol.png"),
+    activeMaleSymbol: require("./activeMaleSymbol.png"),
+    activeFemaleSymbol: require("./activeFemaleSymbol.png"),
+    settingsIcon: require("./settings_icon.png"),
+    activeSettingsIcon: require("./active_settings_icon.png"),
+    activeMealsIcon: require("./active_meals_icon.png"),
+    mealsIcon: require("./meals_icon.png"),
+    activePlannerIcon: require("./active_planner_icon.png"),
+    plannerIcon: require("./planner_icon.png"),
+    activeSosIcon: require("./active_sos_icon.png"),
+    sosIcon: require("./sos_icon.png"),
+    homeTabBG:require("./homeTabBG.png"),
+    backIcon:require("./backIcon.png"),
+    forwordIcon:require("./forwordIcon.png"),
+    foodImage:require('./food_image.png'),
+    closeIcon:require('./closeIcon.png')
+};
+
