@@ -12,10 +12,15 @@ import { Image } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { getUrl } from "../Network/url";
 import { post } from "../Network/request";
-import CommonBottomSheetComponent from "../Components/Core/CommonBottomSheetComponent";
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import { ActivityIndicator } from "react-native";
 import HomeScreenMainComponent from "../Components/Home/HomeScreenMainComponent";
 import MealDetailsComponent from "../Components/Home/MealDetailsComponent";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import COLORS from "../constants/colors";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -33,10 +38,11 @@ const HomeScreen = () => {
     const sheetRef = useRef(null);
 
     const { selectedItems } = route.params;
-    const recipeTab = ["Description", "Recipe", "Ingredients"];
+    // const recipeTab = ["Description", "Recipe", "Ingredients"];
+    const recipeTab = ["Ingredients", "Recipe"];
+
     const [mealList, setMealList] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [isMenuVisible, setMenuVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [activeTab, setActiveTab] = useState(0);
     const [selectedRecipe, setSelectedRecipe] = useState(null);
@@ -44,6 +50,7 @@ const HomeScreen = () => {
     const [selectedMealsData, setSelectedMealsData] = useState([]);
 
     const handleDateNavigation = (direction) => {
+        sheetRef?.current?.close();
         const newDate = new Date(selectedDate);
         if (direction === "yesterday") {
             newDate.setDate(selectedDate.getDate() - 1);
@@ -154,15 +161,21 @@ const HomeScreen = () => {
                             }}
                         />
                     )}
-                    <CommonBottomSheetComponent
+                    <BottomSheet
                         ref={sheetRef}
-                        snapPoints={["74.05%"]}
-                        CustomHandle={() => {
+                        index={-1}
+                        snapPoints={[hp(75)]}
+                        enablePanDownToClose={true}
+                        backgroundStyle={{ borderRadius: 40 }}
+                        handleIndicatorStyle={{
+                            backgroundColor: COLORS.white,
+                        }}
+                        handleComponent={() => {
                             return (
                                 <View
                                     style={{
                                         alignItems: "center",
-                                        marginTop: -111,
+                                        marginTop: -hp(14.09),
                                         padding: 0,
                                     }}
                                 >
@@ -177,24 +190,30 @@ const HomeScreen = () => {
                             );
                         }}
                     >
-                        <MealDetailsComponent
-                            recipeTab={recipeTab}
-                            selectedMealsData={selectedMealsData}
-                            selectedRecipe={selectedRecipe}
-                            selectedMealTab={selectedMealTab}
-                            activeTab={activeTab}
-                            handleSetSelectedMeal={(index) => {
-                                setActiveTab(index);
-                                const RecipeData = mealList[index].Items.filter(
-                                    (itemData) => itemData.Type === "Recipe"
-                                );
-                                setSelectedRecipe(RecipeData[0]);
-                            }}
-                            handleSelectedRecipeTab={(index) => {
-                                setselectedMealTab(recipeTab[index]);
-                            }}
-                        />
-                    </CommonBottomSheetComponent>
+                        <BottomSheetScrollView
+                            contentContainerStyle={{ backgroundColor: "white" }}
+                        >
+                            <MealDetailsComponent
+                                recipeTab={recipeTab}
+                                selectedMealsData={selectedMealsData}
+                                selectedRecipe={selectedRecipe}
+                                selectedMealTab={selectedMealTab}
+                                activeTab={activeTab}
+                                handleSetSelectedMeal={(index) => {
+                                    setActiveTab(index);
+                                    const RecipeData = mealList[
+                                        index
+                                    ].Items.filter(
+                                        (itemData) => itemData.Type === "Recipe"
+                                    );
+                                    setSelectedRecipe(RecipeData[0]);
+                                }}
+                                handleSelectedRecipeTab={(index) => {
+                                    setselectedMealTab(recipeTab[index]);
+                                }}
+                            />
+                        </BottomSheetScrollView>
+                    </BottomSheet>
                 </ImageBackground>
             </GestureHandlerRootView>
         </SafeAreaView>

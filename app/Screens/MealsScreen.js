@@ -11,11 +11,16 @@ import { images } from "../Resource/Images";
 import { Image } from "react-native";
 import { getUrl } from "../Network/url";
 import { post } from "../Network/request";
-import CommonBottomSheetComponent from "../Components/Core/CommonBottomSheetComponent";
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MealDetailsComponent from "../Components/Home/MealDetailsComponent";
 import HomeScreenMainComponent from "../Components/Home/HomeScreenMainComponent";
 import { ActivityIndicator } from "react-native";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import COLORS from "../constants/colors";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -31,7 +36,8 @@ const styles = StyleSheet.create({
 const MealsScreen = () => {
     const sheetRef = useRef(null);
 
-    const recipeTab = ["Description", "Recipe", "Ingredients"];
+    // const recipeTab = ["Description", "Recipe", "Ingredients"];
+    const recipeTab = ["Ingredients", "Recipe"];
     const [mealList, setMealList] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [isLoading, setIsLoading] = useState(false);
@@ -93,9 +99,19 @@ const MealsScreen = () => {
             if (success) {
                 setIsLoading(false);
                 const updateData = [...data.mealData];
-                const filteredData = updateData.filter(
-                    (itemData) => itemData.Recipe !== "*********** "
-                );
+                let filteredData = [];
+                updateData.map((mealData) => {
+                    if (mealData.Meal === "Snack 2") {
+                        mealData.Meal = "Afternoon snack";
+                    } else if (mealData.Meal === "Snack 1") {
+                        mealData.Meal = "Morning snack";
+                    }
+                    mealData.Items.map((item) => {
+                        if (item.Type === "Recipe") {
+                            filteredData.push(mealData);
+                        }
+                    });
+                });
                 const updateRecipeSelectedMeal = filteredData.map(
                     (item) => item.Meal
                 );
@@ -159,50 +175,62 @@ const MealsScreen = () => {
                             handleDateNavigation={handleDateNavigation}
                             selectedDate={selectedDate}
                             mealList={mealList}
+                            daysbuttonDisabled={true}
                         />
                     )}
-                    <CommonBottomSheetComponent
-                        enablePanDownToClose={false}
+                    <BottomSheet
                         ref={sheetRef}
-                        snapPoints={["74.05%"]}
-                        CustomHandle={() => {
+                        index={-1}
+                        snapPoints={[hp(75)]}
+                        enablePanDownToClose={false}
+                        backgroundStyle={{ borderRadius: 40 }}
+                        handleIndicatorStyle={{
+                            backgroundColor: COLORS.white,
+                        }}
+                        handleComponent={() => {
                             return (
                                 <View
                                     style={{
                                         alignItems: "center",
-                                        marginTop: -111,
+                                        marginTop: -hp(14.09),
                                         padding: 0,
                                     }}
                                 >
                                     <Image
                                         source={images.foodImage}
                                         style={{
-                                            width: 189,
-                                            height: 189,
+                                            width: wp(48.46),
+                                            height: wp(48.46),
                                         }}
                                     />
                                 </View>
                             );
                         }}
                     >
-                        <MealDetailsComponent
-                            recipeTab={recipeTab}
-                            selectedMealsData={selectedMealsData}
-                            selectedRecipe={selectedRecipe}
-                            selectedMealTab={selectedMealTab}
-                            activeTab={activeTab}
-                            handleSetSelectedMeal={(index) => {
-                                setActiveTab(index);
-                                const RecipeData = mealList[index].Items.filter(
-                                    (itemData) => itemData.Type === "Recipe"
-                                );
-                                setSelectedRecipe(RecipeData[0]);
-                            }}
-                            handleSelectedRecipeTab={(index) => {
-                                setselectedMealTab(recipeTab[index]);
-                            }}
-                        />
-                    </CommonBottomSheetComponent>
+                        <BottomSheetScrollView
+                            contentContainerStyle={{ backgroundColor: "white" }}
+                        >
+                            <MealDetailsComponent
+                                recipeTab={recipeTab}
+                                selectedMealsData={selectedMealsData}
+                                selectedRecipe={selectedRecipe}
+                                selectedMealTab={selectedMealTab}
+                                activeTab={activeTab}
+                                handleSetSelectedMeal={(index) => {
+                                    setActiveTab(index);
+                                    const RecipeData = mealList[
+                                        index
+                                    ].Items.filter(
+                                        (itemData) => itemData.Type === "Recipe"
+                                    );
+                                    setSelectedRecipe(RecipeData[0]);
+                                }}
+                                handleSelectedRecipeTab={(index) => {
+                                    setselectedMealTab(recipeTab[index]);
+                                }}
+                            />
+                        </BottomSheetScrollView>
+                    </BottomSheet>
                 </ImageBackground>
             </GestureHandlerRootView>
         </SafeAreaView>

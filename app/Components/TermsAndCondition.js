@@ -8,10 +8,11 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 import COLORS from "../constants/colors";
 import CommonButton from "./Core/CommonButton";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const styles = StyleSheet.create({
     termsAndConditionContainer: { flex: 1 },
     termsAndConditionMainContent: {
-        height:"100%",
+        height: "100%",
         flex: 4.6,
         paddingBottom: hp(5.21),
         paddingHorizontal: wp(10.4),
@@ -26,21 +27,19 @@ const styles = StyleSheet.create({
         marginTop: hp(3),
         marginBottom: hp(2),
         color: COLORS.greyText,
-        fontFamily:'Inter_500Medium'
+        fontFamily: "Inter_500Medium",
     },
     contentText: {
         fontSize: RFPercentage(1.9),
         marginBottom: 10,
         color: COLORS.greyText,
-        fontFamily:'Inter_400Regular'
-
+        fontFamily: "Inter_400Regular",
     },
     bulletContentText: {
         fontSize: RFPercentage(1.9),
         marginLeft: 20,
         color: COLORS.greyText,
-        fontFamily:'Inter_400Regular'
-
+        fontFamily: "Inter_400Regular",
     },
     termsAndConditionTitleText: {
         fontSize: RFPercentage(2.9),
@@ -54,9 +53,9 @@ const TermsAndCondition = ({
     isLoading = false,
     mainContainerStyle,
     mainContentStyle,
-    mainFooterStyle
+    mainFooterStyle,
 }) => {
-    const { navigate } = useNavigation();
+    const { navigate, goBack } = useNavigation();
     return (
         <View
             style={{
@@ -64,17 +63,19 @@ const TermsAndCondition = ({
                 ...mainContainerStyle,
             }}
         >
-            <View  style={{
-                ...styles.termsAndConditionMainContent,
-                ...mainContentStyle,
-            }}>
+            <View
+                style={{
+                    ...styles.termsAndConditionMainContent,
+                    ...mainContentStyle,
+                }}
+            >
                 <View style={styles.termsAndConditionTitleView}>
                     <Text style={styles.termsAndConditionTitleText}>
                         Terms and conditions
                     </Text>
                 </View>
-                <View style={{height:'100%'}}>
-                    <ScrollView style={{ marginBottom: hp(1.5)}}>
+                <View style={{ height: "100%" }}>
+                    <ScrollView style={{ marginBottom: hp(1.5) }}>
                         <Text style={styles.headingText}>
                             1. General Terms:
                         </Text>
@@ -940,7 +941,7 @@ const TermsAndCondition = ({
                 style={{
                     flex: 1.4,
                     justifyContent: "flex-end",
-                    ...mainFooterStyle
+                    ...mainFooterStyle,
                 }}
             >
                 <CommonButton
@@ -950,7 +951,16 @@ const TermsAndCondition = ({
                 />
                 <CommonButton
                     btnTitle="Don’t accept "
-                    onPress={() => navigate("Welcome")}
+                    onPress={async () => {
+                        const getToken = JSON.parse(
+                            await AsyncStorage.getItem("userToken")
+                        );
+                        if (getToken) {
+                            goBack();
+                        } else {
+                            navigate("Welcome");
+                        }
+                    }}
                     btnContainerStyle={{
                         backgroundColor: COLORS.white,
                         marginTop: hp(3.45),

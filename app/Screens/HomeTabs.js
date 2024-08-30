@@ -13,8 +13,9 @@ const HomeTabs = () => {
     return (
         <Tab.Navigator
             initialRouteName="Planner"
-            screenOptions={{
-                tabBarActiveTintColor: COLORS.primaryNew,
+            screenOptions={({ route }) => ({
+                tabBarActiveTintColor:
+                    route.name === "SOS" ? COLORS.error : COLORS.primaryNew, // Different tint color for Settings screen
                 tabBarInactiveTintColor: COLORS.greyText,
                 tabBarStyle: {
                     backgroundColor: "#fff",
@@ -31,7 +32,7 @@ const HomeTabs = () => {
                 tabBarIconStyle: {
                     marginBottom: 8,
                 },
-            }}
+            })}
         >
             <Tab.Screen
                 name="Settings"

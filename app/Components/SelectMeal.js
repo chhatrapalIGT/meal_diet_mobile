@@ -39,16 +39,14 @@ const SelectMeal = ({
     mainContainerStyle,
     selectedMeal = [],
 }) => {
-    const mealData =
-        selectedMeal.length === 0
-            ? [
-                  "Breakfast",
-                  "Morning snack",
-                  "Lunch",
-                  "Afternoon snack",
-                  "Dinner",
-              ]
-            : selectedMeal;
+    const intialMealData = [
+        "Breakfast",
+        "Morning snack",
+        "Lunch",
+        "Afternoon snack",
+        "Dinner",
+    ];
+    const mealData = selectedMeal.length === 0 ? intialMealData : selectedMeal;
     const [selectedFoodGroupList, setSelectedFoodGroupList] = useState([]);
     const handleMealButtonPress = (meal) => {
         if (selectedFoodGroupList.includes(meal)) {
@@ -137,11 +135,16 @@ const SelectMeal = ({
                 <CommonButton
                     btnTitle="Next"
                     onPress={() => {
-                        handleSelectMeal(
+                        const newUpdateData =
                             selectedMeal.length === 0
                                 ? selectedFoodGroupList
-                                : selectedMeal
+                                : selectedMeal;
+                        const sortedArray = newUpdateData.sort(
+                            (a, b) =>
+                                intialMealData.indexOf(a) -
+                                intialMealData.indexOf(b)
                         );
+                        handleSelectMeal(sortedArray);
                         setSelectedFoodGroupList([]);
                     }}
                 />
