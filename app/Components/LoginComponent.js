@@ -5,17 +5,19 @@ import {
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { RFPercentage } from "react-native-responsive-fontsize";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomInput from "./Core/CustomInput";
 import CommonButton from "./Core/CommonButton";
 import COLORS from "../constants/colors";
 import { images } from "../Resource/Images";
-import { useNavigation } from "@react-navigation/native";
 import { emailValidation } from "../utils/validation";
 import { getUrl } from "../Network/url";
 import { post } from "../Network/request";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import showToast from "./Core/CustomTost";
 import ForgotPassword from "./ForgotPassword";
+
 
 const styles = StyleSheet.create({
     mainContainer: {
@@ -156,83 +158,95 @@ const LoginComponent = ({ handleCloseSlider }) => {
         navigate("Signup");
     };
     return (
-        <View>
-            <View style={styles.mainContainer}>
-                <Text style={styles.loginHeader}>Hello again! </Text>
+        <KeyboardAwareScrollView
+            // style={{ flex: 1 }}
+            // contentContainerStyle={{ flexGrow: 1 }}
+            enableOnAndroid={true} // This ensures it works well on Android
+            extraHeight={100} // Adjust this value as needed
+            enableAutomaticScroll={true} // Automatically adjust scroll
+        >
+            <View>
+                <View style={styles.mainContainer}>
+                    <Text style={styles.loginHeader}>Hello again! </Text>
 
-                <CustomInput
-                    leftIconName={images.mailIcon}
-                    leftIconStyles={styles.emailIcon}
-                    placeholder="E-mail"
-                    onChangeText={(text) =>
-                        handleTextInputChange(text, "email")
-                    }
-                    keyboardType="email-address"
-                    returnKeyType="next"
-                    value={email}
-                />
-                {emailErr && <Text style={styles.errorText}>{emailErr}</Text>}
-                <CustomInput
-                    leftIconName={images.passwordIcon}
-                    leftIconStyles={styles.passwordIcon}
-                    rightIconName={
-                        isPasswordShown
-                            ? images.openEyeIcon
-                            : images.closedEyeIcon
-                    }
-                    rightIconStyle={
-                        isPasswordShown
-                            ? styles.openEyeIcon
-                            : styles.closedEyeIcon
-                    }
-                    placeholder="Password"
-                    onChangeText={(text) =>
-                        handleTextInputChange(text, "password")
-                    }
-                    keyboardType="default"
-                    returnKeyType="done"
-                    secureTextEntry={!isPasswordShown}
-                    rightIconClick={() => {
-                        setIsPasswordShown(!isPasswordShown);
-                    }}
-                    value={password}
-                />
-                {passwordErr && (
-                    <Text style={styles.errorText}>{passwordErr}</Text>
-                )}
-                <View style={styles.textWithForgotPasswordLinkTextView}>
-                    <Text style={styles.simpleText}>Forgot password?</Text>
-                    <Pressable onPress={() => setModalVisible(true)}>
-                        <Text style={styles.linkText}>
-                            {` Change password `}
+                    <CustomInput
+                        leftIconName={images.mailIcon}
+                        leftIconStyles={styles.emailIcon}
+                        placeholder="E-mail"
+                        onChangeText={(text) =>
+                            handleTextInputChange(text, "email")
+                        }
+                        keyboardType="email-address"
+                        returnKeyType="next"
+                        value={email}
+                    />
+                    {emailErr && (
+                        <Text style={styles.errorText}>{emailErr}</Text>
+                    )}
+                    <CustomInput
+                        leftIconName={images.passwordIcon}
+                        leftIconStyles={styles.passwordIcon}
+                        rightIconName={
+                            isPasswordShown
+                                ? images.openEyeIcon
+                                : images.closedEyeIcon
+                        }
+                        rightIconStyle={
+                            isPasswordShown
+                                ? styles.openEyeIcon
+                                : styles.closedEyeIcon
+                        }
+                        placeholder="Password"
+                        onChangeText={(text) =>
+                            handleTextInputChange(text, "password")
+                        }
+                        keyboardType="default"
+                        returnKeyType="done"
+                        secureTextEntry={!isPasswordShown}
+                        rightIconClick={() => {
+                            setIsPasswordShown(!isPasswordShown);
+                        }}
+                        value={password}
+                    />
+                    {passwordErr && (
+                        <Text style={styles.errorText}>{passwordErr}</Text>
+                    )}
+                    <View style={styles.textWithForgotPasswordLinkTextView}>
+                        <Text style={styles.simpleText}>Forgot password?</Text>
+                        <Pressable onPress={() => setModalVisible(true)}>
+                            <Text style={styles.linkText}>
+                                {` Change password `}
+                            </Text>
+                        </Pressable>
+                    </View>
+                </View>
+                <View style={styles.footerContainer}>
+                    <CommonButton
+                        btnTitle="Login"
+                        onPress={handleLogin}
+                        disabled={isLoading}
+                    />
+                    <View style={styles.textWithSignupLinkTextView}>
+                        <Text style={styles.simpleText}>
+                            You don’t have an account?
                         </Text>
-                    </Pressable>
+                        <Pressable onPress={handleRedirectSignup}>
+                            <Text style={styles.linkText}>{` Sign up`}</Text>
+                        </Pressable>
+                    </View>
                 </View>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => setModalVisible(false)}
+                >
+                    <ForgotPassword
+                        handleClose={() => setModalVisible(false)}
+                    />
+                </Modal>
             </View>
-            <View style={styles.footerContainer}>
-                <CommonButton
-                    btnTitle="Login"
-                    onPress={handleLogin}
-                    disabled={isLoading}
-                />
-                <View style={styles.textWithSignupLinkTextView}>
-                    <Text style={styles.simpleText}>
-                        You don’t have an account?
-                    </Text>
-                    <Pressable onPress={handleRedirectSignup}>
-                        <Text style={styles.linkText}>{` Sign up`}</Text>
-                    </Pressable>
-                </View>
-            </View>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <ForgotPassword handleClose={() => setModalVisible(false)} />
-            </Modal>
-        </View>
+        </KeyboardAwareScrollView>
     );
 };
 

@@ -131,6 +131,13 @@ const HomeScreen = () => {
     useEffect(() => {
         getDaywiseFoodgroup();
     }, [selectedDate, selectedItems]);
+
+    const handleSheetChange = useCallback((index) => {
+        if (index === -1) {
+            setActiveTab(0);
+            setselectedMealTab(recipeTab[0]);
+        }
+    }, []);
     return (
         <SafeAreaView style={styles.mainWelcomeContainer}>
             <GestureHandlerRootView style={{ flex: 1 }}>
@@ -170,6 +177,7 @@ const HomeScreen = () => {
                         handleIndicatorStyle={{
                             backgroundColor: COLORS.white,
                         }}
+                        onChange={handleSheetChange}
                         handleComponent={() => {
                             return (
                                 <View

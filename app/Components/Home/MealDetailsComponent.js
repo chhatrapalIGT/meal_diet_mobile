@@ -61,7 +61,11 @@ const styles = StyleSheet.create({
         paddingBottom: hp(0.8),
     },
     selectedTabMainContent: { height: hp(22) },
-    selectedTabMainWapper: { marginTop: hp(1.3), height: "100%" },
+    selectedTabMainWapper: {
+        marginTop: hp(1.3),
+        height: "100%",
+        marginBottom: hp(1.3),
+    },
     // DescriptionText: {
     //     color: COLORS.greyText,
     //     fontSize: RFPercentage(1.8),

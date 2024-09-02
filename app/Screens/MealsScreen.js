@@ -218,6 +218,7 @@ const MealsScreen = () => {
                                 activeTab={activeTab}
                                 handleSetSelectedMeal={(index) => {
                                     setActiveTab(index);
+                                    setselectedMealTab(recipeTab[0]);
                                     const RecipeData = mealList[
                                         index
                                     ].Items.filter(

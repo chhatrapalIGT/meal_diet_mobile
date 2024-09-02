@@ -23,6 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 import { emailValidation, passwordValidation } from "../../utils/validation";
 import CommonBottomSheetComponent from "../../Components/Core/CommonBottomSheetComponent";
 import LoginComponent from "../../Components/LoginComponent";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -228,159 +229,172 @@ const Signup = () => {
                     resizeMode="stretch"
                     style={styles.welComeBgImg}
                 >
-                    <View style={{ flex: 1 }}>
-                        <View
-                            style={{
-                                flex: 4.6,
-                                justifyContent: "flex-end",
-                                paddingBottom: 40,
-                            }}
-                        >
+                    <KeyboardAwareScrollView
+                        style={{ flex: 1 }}
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        enableOnAndroid={true} // This ensures it works well on Android
+                        extraHeight={100} // Adjust this value as needed
+                        enableAutomaticScroll={true} // Automatically adjust scroll
+                    >
+                        <View style={{ flex: 1 }}>
                             <View
                                 style={{
-                                    marginHorizontal: 40,
+                                    flex: 4.6,
+                                    justifyContent: "flex-end",
+                                    paddingBottom: 40,
                                 }}
                             >
-                                <View style={{ marginBottom: 23 }}>
-                                    <Text style={styles.loginHeader}>
-                                        Create account{" "}
-                                    </Text>
-                                </View>
-                                <View>
-                                    <CustomInput
-                                        leftIconName={images.personIcon}
-                                        leftIconStyles={styles.personIcon}
-                                        placeholder="Name"
-                                        onChangeText={(text) =>
-                                            handleTextInputChange(
-                                                text,
-                                                "username"
-                                            )
-                                        }
-                                        keyboardType="default"
-                                        returnKeyType="next"
-                                        value={username}
-                                    />
-                                    {usernameError && (
-                                        <Text style={styles.errorText}>
-                                            {usernameError}
+                                <View
+                                    style={{
+                                        marginHorizontal: 40,
+                                    }}
+                                >
+                                    <View style={{ marginBottom: 23 }}>
+                                        <Text style={styles.loginHeader}>
+                                            Create account{" "}
                                         </Text>
-                                    )}
+                                    </View>
+                                    <View>
+                                        <CustomInput
+                                            leftIconName={images.personIcon}
+                                            leftIconStyles={styles.personIcon}
+                                            placeholder="Name"
+                                            onChangeText={(text) =>
+                                                handleTextInputChange(
+                                                    text,
+                                                    "username"
+                                                )
+                                            }
+                                            keyboardType="default"
+                                            returnKeyType="next"
+                                            value={username}
+                                        />
+                                        {usernameError && (
+                                            <Text style={styles.errorText}>
+                                                {usernameError}
+                                            </Text>
+                                        )}
 
-                                    <CustomInput
-                                        leftIconName={images.mailIcon}
-                                        leftIconStyles={styles.emailIcon}
-                                        placeholder="E-mail"
-                                        onChangeText={(text) =>
-                                            handleTextInputChange(text, "email")
-                                        }
-                                        keyboardType="email-address"
-                                        returnKeyType="next"
-                                        value={email}
-                                    />
-                                    {emailError && (
-                                        <Text style={styles.errorText}>
-                                            {emailError}
-                                        </Text>
-                                    )}
-                                    <CustomInput
-                                        leftIconName={images.passwordIcon}
-                                        leftIconStyles={styles.passwordIcon}
-                                        rightIconName={
-                                            isPasswordShown
-                                                ? images.openEyeIcon
-                                                : images.closedEyeIcon
-                                        }
-                                        rightIconStyle={
-                                            isPasswordShown
-                                                ? styles.openEyeIcon
-                                                : styles.closedEyeIcon
-                                        }
-                                        placeholder="Password"
-                                        onChangeText={(text) =>
-                                            handleTextInputChange(
-                                                text,
-                                                "password"
-                                            )
-                                        }
-                                        keyboardType="default"
-                                        returnKeyType="next"
-                                        secureTextEntry={!isPasswordShown}
-                                        rightIconClick={() => {
-                                            setIsPasswordShown(
-                                                !isPasswordShown
-                                            );
-                                        }}
-                                        value={password}
-                                    />
-                                    {passwordError && (
-                                        <Text style={styles.errorText}>
-                                            {passwordError}
-                                        </Text>
-                                    )}
+                                        <CustomInput
+                                            leftIconName={images.mailIcon}
+                                            leftIconStyles={styles.emailIcon}
+                                            placeholder="E-mail"
+                                            onChangeText={(text) =>
+                                                handleTextInputChange(
+                                                    text,
+                                                    "email"
+                                                )
+                                            }
+                                            keyboardType="email-address"
+                                            returnKeyType="next"
+                                            value={email}
+                                        />
+                                        {emailError && (
+                                            <Text style={styles.errorText}>
+                                                {emailError}
+                                            </Text>
+                                        )}
+                                        <CustomInput
+                                            leftIconName={images.passwordIcon}
+                                            leftIconStyles={styles.passwordIcon}
+                                            rightIconName={
+                                                isPasswordShown
+                                                    ? images.openEyeIcon
+                                                    : images.closedEyeIcon
+                                            }
+                                            rightIconStyle={
+                                                isPasswordShown
+                                                    ? styles.openEyeIcon
+                                                    : styles.closedEyeIcon
+                                            }
+                                            placeholder="Password"
+                                            onChangeText={(text) =>
+                                                handleTextInputChange(
+                                                    text,
+                                                    "password"
+                                                )
+                                            }
+                                            keyboardType="default"
+                                            returnKeyType="next"
+                                            secureTextEntry={!isPasswordShown}
+                                            rightIconClick={() => {
+                                                setIsPasswordShown(
+                                                    !isPasswordShown
+                                                );
+                                            }}
+                                            value={password}
+                                        />
+                                        {passwordError && (
+                                            <Text style={styles.errorText}>
+                                                {passwordError}
+                                            </Text>
+                                        )}
 
-                                    <CustomInput
-                                        leftIconName={images.passwordIcon}
-                                        leftIconStyles={styles.passwordIcon}
-                                        rightIconName={
-                                            isConfirmPasswordShown
-                                                ? images.openEyeIcon
-                                                : images.closedEyeIcon
-                                        }
-                                        rightIconStyle={
-                                            isConfirmPasswordShown
-                                                ? styles.openEyeIcon
-                                                : styles.closedEyeIcon
-                                        }
-                                        placeholder="Confirm Password"
-                                        onChangeText={(text) =>
-                                            handleTextInputChange(
-                                                text,
-                                                "confirmPassword"
-                                            )
-                                        }
-                                        keyboardType="default"
-                                        returnKeyType="done"
-                                        secureTextEntry={
-                                            !isConfirmPasswordShown
-                                        }
-                                        rightIconClick={() => {
-                                            setIsConfirmPasswordShown(
+                                        <CustomInput
+                                            leftIconName={images.passwordIcon}
+                                            leftIconStyles={styles.passwordIcon}
+                                            rightIconName={
+                                                isConfirmPasswordShown
+                                                    ? images.openEyeIcon
+                                                    : images.closedEyeIcon
+                                            }
+                                            rightIconStyle={
+                                                isConfirmPasswordShown
+                                                    ? styles.openEyeIcon
+                                                    : styles.closedEyeIcon
+                                            }
+                                            placeholder="Confirm Password"
+                                            onChangeText={(text) =>
+                                                handleTextInputChange(
+                                                    text,
+                                                    "confirmPassword"
+                                                )
+                                            }
+                                            keyboardType="default"
+                                            returnKeyType="done"
+                                            secureTextEntry={
                                                 !isConfirmPasswordShown
-                                            );
-                                        }}
-                                        value={confirmPassword}
-                                    />
-                                    {confirmPasswordError && (
-                                        <Text style={styles.errorText}>
-                                            {confirmPasswordError}
-                                        </Text>
-                                    )}
+                                            }
+                                            rightIconClick={() => {
+                                                setIsConfirmPasswordShown(
+                                                    !isConfirmPasswordShown
+                                                );
+                                            }}
+                                            value={confirmPassword}
+                                        />
+                                        {confirmPasswordError && (
+                                            <Text style={styles.errorText}>
+                                                {confirmPasswordError}
+                                            </Text>
+                                        )}
+                                    </View>
+                                </View>
+                            </View>
+                            <View
+                                style={{
+                                    flex: 1.4,
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <CommonButton
+                                    btnTitle="Signup"
+                                    onPress={handleSignUp}
+                                />
+                                <View style={styles.textWithSignupLinkTextView}>
+                                    <Text style={styles.simpleText}>
+                                        You already have an account?
+                                    </Text>
+                                    <Pressable
+                                        onPress={() => handleSnapPress(0)}
+                                    >
+                                        <Text
+                                            style={styles.linkText}
+                                        >{` Login`}</Text>
+                                    </Pressable>
                                 </View>
                             </View>
                         </View>
-                        <View
-                            style={{
-                                flex: 1.4,
-                                justifyContent: "center",
-                            }}
-                        >
-                            <CommonButton
-                                btnTitle="Signup"
-                                onPress={handleSignUp}
-                            />
-                            <View style={styles.textWithSignupLinkTextView}>
-                                <Text style={styles.simpleText}>
-                                    You already have an account?
-                                </Text>
-                                <Pressable onPress={() => handleSnapPress(0)}>
-                                    <Text
-                                        style={styles.linkText}
-                                    >{` Login`}</Text>
-                                </Pressable>
-                            </View>
-                        </View>
-                    </View>
+                    </KeyboardAwareScrollView>
                     <CommonBottomSheetComponent ref={sheetRef}>
                         <LoginComponent
                             handleCloseSlider={() => {

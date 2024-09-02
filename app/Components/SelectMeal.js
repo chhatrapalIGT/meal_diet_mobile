@@ -144,7 +144,11 @@ const SelectMeal = ({
                                 intialMealData.indexOf(a) -
                                 intialMealData.indexOf(b)
                         );
-                        handleSelectMeal(sortedArray);
+                        handleSelectMeal(
+                            sortedArray.length === 0
+                                ? intialMealData
+                                : sortedArray
+                        );
                         setSelectedFoodGroupList([]);
                     }}
                 />

@@ -126,13 +126,13 @@ const HomeScreenMainComponent = ({
                     </Pressable>
                     <View style={styles.headerTextView}>
                         <Text style={styles.headerDayText}>
+                            {selectedDate.toDateString()}
+                        </Text>
+                        <Text style={styles.headerDateText}>
                             {selectedDate.toDateString() ===
                             new Date().toDateString()
                                 ? "Today"
                                 : ""}
-                        </Text>
-                        <Text style={styles.headerDateText}>
-                            {selectedDate.toDateString()}
                         </Text>
                     </View>
                     <Pressable

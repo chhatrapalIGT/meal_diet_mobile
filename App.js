@@ -27,17 +27,17 @@ import ChangePasswordScreen from "./app/Screens/ChangePasswordScreen";
 import MealListSceen from "./app/Screens/MealListSceen";
 import SelectedMealListSceen from "./app/Screens/SelectedMealListSceen";
 
-// Sentry.init({
-//   dsn: "https://973df241877ce7414eb140408eb39dba@o4506988063621120.ingest.us.sentry.io/4507383862132736",
-//   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-//   // We recommend adjusting this value in production.
-//   tracesSampleRate: 1.0,
-//   _experiments: {
-//     // profilesSampleRate is relative to tracesSampleRate.
-//     // Here, we'll capture profiles for 100% of transactions.
-//     profilesSampleRate: 1.0,
-//   },
-// });
+Sentry.init({
+  dsn: "https://973df241877ce7414eb140408eb39dba@o4506988063621120.ingest.us.sentry.io/4507383862132736",
+  // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+  // We recommend adjusting this value in production.
+  tracesSampleRate: 1.0,
+  _experiments: {
+    // profilesSampleRate is relative to tracesSampleRate.
+    // Here, we'll capture profiles for 100% of transactions.
+    profilesSampleRate: 1.0,
+  },
+});
 
 const Stack = createNativeStackNavigator();
 
