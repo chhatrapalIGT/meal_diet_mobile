@@ -55,6 +55,9 @@ const MealListSceen = () => {
                         marginTop: hp(5),
                         marginBottom: hp(3),
                     }}
+                    mainFooterStyle={{
+                        justifyContent: "center",
+                    }}
                     handleSelectMeal={(selectedMeals) => {
                         navigate("SelectedMealListing", {
                             selectedMeals,

@@ -1,12 +1,17 @@
 import React from "react";
 import { Image } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import COLORS from "../constants/colors";
 import { images } from "../Resource/Images";
 import HomeScreen from "./HomeScreen";
 import SettingsScreen from "./SettingsScreen";
 import SOSScreen from "./SOSScreen";
 import MealsScreen from "./MealsScreen";
+import { RFPercentage } from "react-native-responsive-fontsize";
 
 const HomeTabs = () => {
     const Tab = createBottomTabNavigator();
@@ -22,15 +27,16 @@ const HomeTabs = () => {
                     borderTopWidth: 0,
                     elevation: 0,
                     shadowOpacity: 0,
-                    paddingTop: 13,
-                    height: 63,
+                    paddingTop: hp(1.89),
+                    paddingBottom: hp(1.65),
+                    height: hp(9.47),
                 },
                 tabBarLabelStyle: {
-                    fontSize: 10,
+                    fontSize: RFPercentage(1.3),
                     fontFamily: "Inter_500Medium",
                 },
                 tabBarIconStyle: {
-                    marginBottom: 8,
+                    marginBottom: hp(0.94),
                 },
             })}
         >

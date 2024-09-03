@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
 const SelectMeal = ({
     handleSelectMeal,
     mainContainerStyle,
+    mainFooterStyle,
     selectedMeal = [],
 }) => {
     const intialMealData = [
@@ -130,6 +131,7 @@ const SelectMeal = ({
                 style={{
                     flex: 1.4,
                     justifyContent: "flex-end",
+                    ...mainFooterStyle
                 }}
             >
                 <CommonButton

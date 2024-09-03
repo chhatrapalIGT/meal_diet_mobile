@@ -1,5 +1,10 @@
 import React from "react";
-import { Dimensions, StyleSheet, ImageBackground } from "react-native";
+import {
+    Dimensions,
+    StyleSheet,
+    ImageBackground,
+    Platform,
+} from "react-native";
 import {
     heightPercentageToDP as hp,
     widthPercentageToDP as wp,
@@ -11,6 +16,7 @@ import { images } from "../Resource/Images";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
+const isTablet = screenWidth >= 768 && screenHeight >= 768;
 const styles = StyleSheet.create({
     mainWelcomeContainer: { flex: 1 },
     welComeBgImg: {
@@ -33,6 +39,13 @@ const TermsAndConditionScreen = () => {
                     mainContainerStyle={{
                         marginTop: hp(5),
                         marginBottom: hp(3),
+                        flex: Platform.OS === "ios" && !isTablet ? 4 : 4.6,
+                    }}
+                    mainFooterStyle={{
+                        flex: Platform.OS === "ios" && isTablet ? 2 : 1.4,
+                        marginBottom:
+                            Platform.OS === "ios" && isTablet ? hp(3.55) : 0,
+                        justifyContent: "center",
                     }}
                     handleTermsAndCondition={() => {
                         goBack();

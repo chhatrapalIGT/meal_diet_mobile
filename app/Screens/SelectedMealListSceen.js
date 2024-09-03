@@ -41,6 +41,9 @@ const SelectedMealListSceen = () => {
                         marginTop: hp(5),
                         marginBottom: hp(3),
                     }}
+                    mainFooterStyle={{
+                        justifyContent: "center",
+                    }}
                     handleSelectMeal={(selectedMeals) => {
                         navigate("HomeTabs", {
                             screen: "Planner",
@@ -48,7 +51,10 @@ const SelectedMealListSceen = () => {
                                 selectedItems: selectedMeals,
                             },
                         });
-                        AsyncStorage.setItem("selectedMeal", JSON.stringify(selectedMeals));
+                        AsyncStorage.setItem(
+                            "selectedMeal",
+                            JSON.stringify(selectedMeals)
+                        );
                     }}
                 />
             </ImageBackground>

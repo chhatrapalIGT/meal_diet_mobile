@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View, Modal, Button } from "react-native";
+import {
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+    Modal,
+    Button,
+    Dimensions,
+    Platform,
+} from "react-native";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -18,10 +27,12 @@ import { post } from "../Network/request";
 import showToast from "./Core/CustomTost";
 import ForgotPassword from "./ForgotPassword";
 
-
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
+const isTablet = screenWidth >= 768 && screenHeight >= 768;
 const styles = StyleSheet.create({
     mainContainer: {
-        height: hp(38.5),
+        height: Platform.OS === "ios" && !isTablet ? hp(32.5) : hp(38.5),
         marginTop: hp(1.55),
         marginLeft: wp(12),
         marginRight: wp(8.1),
@@ -36,7 +47,7 @@ const styles = StyleSheet.create({
     openEyeIcon: { width: 26, height: 14, marginLeft: 4 },
     closedEyeIcon: { width: 24, height: 12, marginLeft: 4 },
     footerContainer: {
-        height: hp(16.5),
+        height: Platform.OS === "ios" && !isTablet ? hp(22.5) : hp(16.5),
     },
     textWithForgotPasswordLinkTextView: {
         flexDirection: "row",

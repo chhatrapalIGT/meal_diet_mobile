@@ -27,6 +27,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
+const isTablet = screenWidth >= 768 && screenHeight >= 768;
 
 const styles = StyleSheet.create({
     mainWelcomeContainer: { flex: 1 },
@@ -374,6 +375,8 @@ const Signup = () => {
                                 style={{
                                     flex: 1.4,
                                     justifyContent: "center",
+                                    marginBottom:
+                                        Platform.OS === "ios"&&!isTablet ? hp(3.55) : 0,
                                 }}
                             >
                                 <CommonButton

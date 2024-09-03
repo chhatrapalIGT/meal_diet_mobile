@@ -5,6 +5,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     Dimensions,
+    Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -24,6 +25,7 @@ import CustomInput from "../Components/Core/CustomInput";
 import CommonButton from "../Components/Core/CommonButton";
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
+const isTablet = screenWidth >= 768 && screenHeight >= 768;
 const styles = StyleSheet.create({
     mainWelcomeContainer: { flex: 1 },
     welComeBgImg: {
@@ -319,6 +321,10 @@ const ChangePasswordScreen = () => {
                             style={{
                                 flex: 1.4,
                                 justifyContent: "center",
+                                marginBottom:
+                                    Platform.OS === "ios" && !isTablet
+                                        ? hp(3.55)
+                                        : 0,
                             }}
                         >
                             <CommonButton
