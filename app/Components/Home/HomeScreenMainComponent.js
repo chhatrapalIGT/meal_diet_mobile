@@ -77,7 +77,6 @@ const styles = StyleSheet.create({
         fontFamily: "Inter_500Medium",
     },
     mealListItemReadMore: {
-        marginTop: hp(1.77),
         color: COLORS.primaryNew,
         fontSize: RFPercentage(1.3),
         fontFamily: "Inter_500Medium",
@@ -216,6 +215,12 @@ const HomeScreenMainComponent = ({
                                                                                 }
                                                                             </Text>
                                                                             <Pressable
+                                                                                style={{
+                                                                                    marginTop:
+                                                                                        hp(
+                                                                                            1.77
+                                                                                        ),
+                                                                                }}
                                                                                 onPress={() =>
                                                                                     handleMealDetailsForRecipe(
                                                                                         meal.Meal,

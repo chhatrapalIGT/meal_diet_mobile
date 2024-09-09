@@ -199,7 +199,7 @@ const MealDetailsComponent = ({
                                     style={styles.selectedTabMainWapper}
                                     scrollEnabled={true}
                                 >
-                                    {selectedRecipe["Recipe instructions"]
+                                    {selectedRecipe["Recipe instructions"] && selectedRecipe["Recipe instructions"]
                                         .split(",")
                                         .map((ing, index) => {
                                             return (
@@ -230,7 +230,7 @@ const MealDetailsComponent = ({
                                     style={styles.selectedTabMainWapper}
                                     scrollEnabled={true}
                                 >
-                                    {selectedRecipe["Recipe Ingredients"]
+                                    {selectedRecipe["Recipe Ingredients"] && selectedRecipe["Recipe Ingredients"]
                                         .split(":")[1]
                                         .split(",")
                                         .map((ing, index) => {

@@ -166,16 +166,6 @@ const Signup = () => {
             setConfirmPasswordError("Password and Confirm Password not same");
             isValid = false;
         }
-        // if (gender === "") {
-        //     setGenderError("Gender is required");
-        //     isValid = false;
-        // }
-        // if (!isChecked) {
-        //     setIsTermAndConditionErr(
-        //         "Terms and conditions. Please fill them out"
-        //     );
-        //     isValid = false;
-        // }
         return isValid;
     };
     const handleSignUp = async () => {
@@ -188,34 +178,6 @@ const Signup = () => {
                 confirmPassword: confirmPassword,
             };
             navigate("SignupSteps", { userData });
-            // try {
-            //     setIsLoading(true);
-            //     const userData = {
-            //         IDnumber: idNumber,
-            //         email: email.toLowerCase(),
-            //         gender: gender,
-            //         username: username,
-            //         password: password,
-            //         confirmPassword: confirmPassword,
-            //         termsAndConditions: isChecked,
-            //     };
-            //     const url = getUrl("register");
-            //     const res = await post(url, userData);
-            //     const { success, message } = res;
-            //     if (success) {
-            //         setIsLoading(false);
-            //         showToast("success", message);
-            //         setTimeout(() => {
-            //             navigate("Login");
-            //         }, 1000);
-            //     } else {
-            //         setIsLoading(false);
-            //         showToast("error", message);
-            //     }
-            // } catch (error) {
-            //     setIsLoading(false);
-            //     showToast("error", "Internal server error.");
-            // }
         }
     };
 
