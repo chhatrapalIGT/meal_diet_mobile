@@ -7,6 +7,8 @@ import {
 } from "react-native-responsive-screen";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import COLORS from "../../constants/colors";
+import { useSelector } from "react-redux";
+import { translations } from "../../Language";
 
 const styles = StyleSheet.create({
     mainWrapper: {
@@ -39,6 +41,8 @@ const styles = StyleSheet.create({
 });
 
 const SOSComponent = ({ handleClose }) => {
+  const currentLanguage = useSelector((state) => state.language.language);
+
     return (
         <View style={styles.mainWrapper}>
             <View style={styles.modalMainContent}>
@@ -83,7 +87,7 @@ const SOSComponent = ({ handleClose }) => {
                                 color: COLORS.greyText,
                             }}
                         >
-                            Sos message
+                            {translations[currentLanguage].sosMessage}
                         </Text>
                     </View>
                 </View>

@@ -9,6 +9,8 @@ import COLORS from "../constants/colors";
 import CommonButton from "./Core/CommonButton";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector } from "react-redux";
+import { translations } from "../Language";
 const styles = StyleSheet.create({
     termsAndConditionContainer: { flex: 1 },
     termsAndConditionMainContent: {
@@ -56,6 +58,8 @@ const TermsAndCondition = ({
     mainFooterStyle,
 }) => {
     const { navigate, goBack } = useNavigation();
+  const currentLanguage = useSelector((state) => state.language.language);
+
     return (
         <View
             style={{
@@ -71,7 +75,7 @@ const TermsAndCondition = ({
             >
                 <View style={styles.termsAndConditionTitleView}>
                     <Text style={styles.termsAndConditionTitleText}>
-                        Terms and conditions
+                        {translations[currentLanguage].termsAndConditionText}
                     </Text>
                 </View>
                 <View style={{ height: "100%" }}>
@@ -945,12 +949,12 @@ const TermsAndCondition = ({
                 }}
             >
                 <CommonButton
-                    btnTitle="Accept"
+                    btnTitle= {translations[currentLanguage].accept}
                     onPress={() => handleTermsAndCondition(true)}
                     disabled={isLoading}
                 />
                 <CommonButton
-                    btnTitle="Don’t accept "
+                    btnTitle= {translations[currentLanguage].doNotAccept}
                     onPress={async () => {
                         const getToken = JSON.parse(
                             await AsyncStorage.getItem("userToken")

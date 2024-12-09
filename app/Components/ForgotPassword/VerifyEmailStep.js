@@ -10,6 +10,9 @@ import CommonButton from "../Core/CommonButton";
 import COLORS from "../../constants/colors";
 import { images } from "../../Resource/Images";
 import { emailValidation } from "../../utils/validation";
+import { useSelector } from "react-redux";
+import { translations } from "../../Language/index"
+
 const styles = StyleSheet.create({
     mainWapper: {
         marginTop: hp(3.08),
@@ -32,6 +35,8 @@ const styles = StyleSheet.create({
     },
 });
 const VerifyEmailStep = ({ handleSubmit, isLoading }) => {
+    const currentLanguage = useSelector((state) => state.language.language);
+    
     const [email, setEmail] = useState("");
     const [emailErr, setEmailErr] = useState("");
     const handleTextInputChange = (value, type) => {
@@ -66,12 +71,12 @@ const VerifyEmailStep = ({ handleSubmit, isLoading }) => {
     return (
         <View style={styles.mainWapper}>
             <Text style={styles.header}>
-                Send verification code to e-mail address
+                {translations[currentLanguage].sendVerificationCode}
             </Text>
             <CustomInput
                 leftIconName={images.mailIcon}
                 leftIconStyles={styles.emailIcon}
-                placeholder="E-mail"
+                placeholder={translations[currentLanguage].email}
                 onChangeText={(text) => handleTextInputChange(text, "email")}
                 keyboardType="email-address"
                 returnKeyType="done"
@@ -86,7 +91,7 @@ const VerifyEmailStep = ({ handleSubmit, isLoading }) => {
                         handleSubmit({ email: email.toLowerCase() });
                     }
                 }}
-                btnTitle="Next"
+                btnTitle={translations[currentLanguage].next}
                 btnContainerStyle={styles.btnWrapper}
                 disabled={isLoading}
             />

@@ -24,6 +24,8 @@ import COLORS from "../constants/colors";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import CommonBottomSheetComponent from "../Components/Core/CommonBottomSheetComponent";
 import LoginComponent from "../Components/LoginComponent";
+import { useSelector } from "react-redux";
+import { translations } from "../Language";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
     welComeBgImg: {
         height: screenHeight,
         width: screenWidth,
-        alignItems: "center",
+        // alignItems: "center",
     },
     middleContentMainView: {
         display: "flex",
@@ -86,6 +88,8 @@ const styles = StyleSheet.create({
     },
 });
 const Welcome = () => {
+ const currentLanguage = useSelector((state) => state.language.language);
+
     const { navigate } = useNavigation();
     const sheetRef = useRef(null);
 
@@ -95,8 +99,18 @@ const Welcome = () => {
 
     const handleRedirect = async () => {
         const authToken = JSON.parse(await AsyncStorage.getItem("userToken"));
+        const getSelectedMeals = JSON.parse(await AsyncStorage.getItem("selectedMeal"));
         if (authToken) {
-            navigate("MealListing");
+            if(getSelectedMeals === null){
+                navigate("MealListing");
+            }else{
+                navigate("HomeTabs", {
+                    screen: "Planner",
+                    params: {
+                        selectedItems:getSelectedMeals
+                    },
+                });
+            }
         }
     };
     useEffect(() => {
@@ -125,25 +139,24 @@ const Welcome = () => {
                                     Mind Diet
                                 </Text>
                                 <Text style={styles.appSubTitleText}>
-                                    Start your health journey now
+                                    {translations[currentLanguage].startYourHealthJourneyNow}
                                 </Text>
                             </View>
                         </View>
                         <View style={styles.bottomContent}>
                             <CommonButton
-                                btnTitle="Login"
+                                btnTitle={translations[currentLanguage].login}
                                 onPress={() => handleSnapPress(0)}
                             />
                             <CommonButton
-                                btnTitle="Sign up"
+                                btnTitle={translations[currentLanguage].signup}
                                 onPress={() => navigate("Signup")}
                                 btnContainerStyle={styles.SignupButtonView}
                                 btnTextStyle={styles.signupText}
                             />
                             <View style={styles.termsAndConditionView}>
                                 <Text style={styles.termsAndConditionText1}>
-                                    When signing up and using this app you will
-                                    need to agree to our
+                                  {translations[currentLanguage].agreeTotermsAndconditions}
                                 </Text>
                                 <Pressable
                                     onPress={() => {
@@ -151,7 +164,7 @@ const Welcome = () => {
                                     }}
                                 >
                                     <Text style={styles.termsAndConditionText2}>
-                                        Terms and conditions
+                                        {translations[currentLanguage].termsAndConditionText}
                                     </Text>
                                 </Pressable>
                             </View>

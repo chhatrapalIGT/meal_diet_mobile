@@ -2,7 +2,6 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import { ImageBackground } from "react-native";
 import { Dimensions, SafeAreaView, StyleSheet } from "react-native";
-import { Text, View } from "react-native";
 import {
     heightPercentageToDP as hp,
     widthPercentageToDP as wp,

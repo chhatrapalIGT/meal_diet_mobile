@@ -14,6 +14,8 @@ export const getUrl = (value) => {
             return "auth/findDayWise";
         case "getProfile":
             return "auth/profile";
+        case "updatedProfile":
+            return 'auth/updateProfile'
         default:
             break;
     }

@@ -24,6 +24,8 @@ import { emailValidation, passwordValidation } from "../../utils/validation";
 import CommonBottomSheetComponent from "../../Components/Core/CommonBottomSheetComponent";
 import LoginComponent from "../../Components/LoginComponent";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { translations } from "../../Language";
+import { useSelector } from "react-redux";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -67,9 +69,14 @@ const styles = StyleSheet.create({
     },
 });
 const Signup = () => {
+    const currentLanguage = useSelector((state) => state.language.language);
     const navigation = useNavigation();
     const { navigate } = navigation;
     const sheetRef = useRef(null);
+    // const [username, setUsername] = useState("Test");
+    // const [email, setEmail] = useState("kajal@email.com");
+    // const [password, setPassword] = useState("Kajal@1234");
+    // const [confirmPassword, setConfirmPassword] = useState("Kajal@1234");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -214,14 +221,14 @@ const Signup = () => {
                                 >
                                     <View style={{ marginBottom: 23 }}>
                                         <Text style={styles.loginHeader}>
-                                            Create account{" "}
+                                            {translations[currentLanguage].createAccount}
                                         </Text>
                                     </View>
                                     <View>
                                         <CustomInput
                                             leftIconName={images.personIcon}
                                             leftIconStyles={styles.personIcon}
-                                            placeholder="Name"
+                                            placeholder={translations[currentLanguage].name}
                                             onChangeText={(text) =>
                                                 handleTextInputChange(
                                                     text,
@@ -241,7 +248,7 @@ const Signup = () => {
                                         <CustomInput
                                             leftIconName={images.mailIcon}
                                             leftIconStyles={styles.emailIcon}
-                                            placeholder="E-mail"
+                                            placeholder={translations[currentLanguage].email}
                                             onChangeText={(text) =>
                                                 handleTextInputChange(
                                                     text,
@@ -270,7 +277,7 @@ const Signup = () => {
                                                     ? styles.openEyeIcon
                                                     : styles.closedEyeIcon
                                             }
-                                            placeholder="Password"
+                                            placeholder={translations[currentLanguage].password}
                                             onChangeText={(text) =>
                                                 handleTextInputChange(
                                                     text,
@@ -306,7 +313,7 @@ const Signup = () => {
                                                     ? styles.openEyeIcon
                                                     : styles.closedEyeIcon
                                             }
-                                            placeholder="Confirm Password"
+                                            placeholder={translations[currentLanguage].confirmPassword}
                                             onChangeText={(text) =>
                                                 handleTextInputChange(
                                                     text,
@@ -342,19 +349,20 @@ const Signup = () => {
                                 }}
                             >
                                 <CommonButton
-                                    btnTitle="Signup"
+                                    btnTitle={translations[currentLanguage].signup}
                                     onPress={handleSignUp}
                                 />
                                 <View style={styles.textWithSignupLinkTextView}>
                                     <Text style={styles.simpleText}>
-                                        You already have an account?
+                                        {/* You already have an account? */}
+                                        {translations[currentLanguage].doYouAlreadyHaveAnAcccout}
                                     </Text>
                                     <Pressable
                                         onPress={() => handleSnapPress(0)}
                                     >
                                         <Text
                                             style={styles.linkText}
-                                        >{` Login`}</Text>
+                                        >{` ${translations[currentLanguage].login}`}</Text>
                                     </Pressable>
                                 </View>
                             </View>

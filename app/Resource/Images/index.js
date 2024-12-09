@@ -23,6 +23,9 @@ export const images = {
     backIcon:require("./backIcon.png"),
     forwordIcon:require("./forwordIcon.png"),
     foodImage:require('./food_image.png'),
-    closeIcon:require('./closeIcon.png')
+    closeIcon:require('./closeIcon.png'),
+    usLanguageIcon:require('./us_language.png'),
+    swedishLanguageIcon:require('./svenska_language.png'),
+    italianLanguageIcon:require('./italiano_language.png'),
 };
 

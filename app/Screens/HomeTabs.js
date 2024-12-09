@@ -12,9 +12,12 @@ import SettingsScreen from "./SettingsScreen";
 import SOSScreen from "./SOSScreen";
 import MealsScreen from "./MealsScreen";
 import { RFPercentage } from "react-native-responsive-fontsize";
+import { useSelector } from "react-redux";
+import { translations } from "../Language";
 
 const HomeTabs = () => {
     const Tab = createBottomTabNavigator();
+    const currentLanguage = useSelector((state) => state.language.language);
     return (
         <Tab.Navigator
             initialRouteName="Planner"
@@ -45,7 +48,7 @@ const HomeTabs = () => {
                 component={SettingsScreen}
                 options={{
                     headerShown: false,
-                    tabBarLabel: "settings",
+                    tabBarLabel: translations[currentLanguage].settings.toLowerCase(),
                     tabBarIcon: ({ focused }) => (
                         <Image
                             source={
@@ -63,7 +66,7 @@ const HomeTabs = () => {
                 component={SOSScreen}
                 options={{
                     headerShown: false,
-                    tabBarLabel: "SOS",
+                    tabBarLabel: translations[currentLanguage].sos,
                     tabBarIcon: ({ focused }) => (
                         <Image
                             source={
@@ -79,7 +82,7 @@ const HomeTabs = () => {
                 component={HomeScreen}
                 options={{
                     headerShown: false,
-                    tabBarLabel: "planner",
+                    tabBarLabel: translations[currentLanguage].planner,
                     tabBarIcon: ({ focused }) => (
                         <Image
                             source={
@@ -97,7 +100,7 @@ const HomeTabs = () => {
                 component={MealsScreen}
                 options={{
                     headerShown: false,
-                    tabBarLabel: "meals",
+                    tabBarLabel: translations[currentLanguage].meals,
                     tabBarIcon: ({ focused }) => (
                         <Image
                             source={

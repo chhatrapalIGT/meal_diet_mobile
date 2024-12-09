@@ -23,6 +23,8 @@ import showToast from "../Components/Core/CustomTost";
 import { images } from "../Resource/Images";
 import CustomInput from "../Components/Core/CustomInput";
 import CommonButton from "../Components/Core/CommonButton";
+import { useSelector } from "react-redux";
+import { translations } from "../Language";
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 const isTablet = screenWidth >= 768 && screenHeight >= 768;
@@ -36,10 +38,14 @@ const styles = StyleSheet.create({
         marginTop: hp(2.8),
         marginHorizontal: wp(6.2),
         backgroundColor: COLORS.primaryNew,
-        width: wp(17),
+        // width: wp(17),
         justifyContent: "center",
         display: "flex",
         alignItems: "center",
+        flexDirection: 'row',
+        alignSelf: 'flex-start',
+        paddingHorizontal:10,
+        paddingVertical:5
     },
     backBtnText: {
         fontSize: RFPercentage(2.9),
@@ -71,6 +77,7 @@ const styles = StyleSheet.create({
 });
 const ChangePasswordScreen = () => {
     const { goBack } = useNavigation();
+    const currentLanguage = useSelector((state) => state.language.language);
     const [oldPassword, setOldPassword] = useState("");
     const [oldPasswordError, setOldPasswordError] = useState("");
     const [isOldPasswordShown, setIsOldPasswordShown] = useState(false);
@@ -194,11 +201,12 @@ const ChangePasswordScreen = () => {
                         style={styles.backButtonView}
                         onPress={() => goBack()}
                     >
-                        <Text style={styles.backBtnText}>Back</Text>
+                        <Text style={styles.backBtnText}>{translations[currentLanguage].back}</Text>
                     </TouchableOpacity>
                     <View style={styles.changePassHeadingContainer}>
                         <Text style={styles.changePassHeadingText}>
-                            Change Password
+                            {/* Change Password */}
+                            {translations[currentLanguage].chnagePassword}
                         </Text>
                     </View>
                     <View
@@ -224,7 +232,7 @@ const ChangePasswordScreen = () => {
                                             ? styles.openEyeIcon
                                             : styles.closedEyeIcon
                                     }
-                                    placeholder="Old Password"
+                                    placeholder={translations[currentLanguage].oldPassword}
                                     onChangeText={(text) =>
                                         handleTextInputChange(
                                             text,
@@ -261,7 +269,7 @@ const ChangePasswordScreen = () => {
                                             ? styles.openEyeIcon
                                             : styles.closedEyeIcon
                                     }
-                                    placeholder="New Password"
+                                    placeholder={translations[currentLanguage].newPassword}
                                     onChangeText={(text) =>
                                         handleTextInputChange(text, "password")
                                     }
@@ -293,7 +301,7 @@ const ChangePasswordScreen = () => {
                                             ? styles.openEyeIcon
                                             : styles.closedEyeIcon
                                     }
-                                    placeholder="New Confirm Password"
+                                    placeholder={translations[currentLanguage].newConfirmPassword}
                                     onChangeText={(text) =>
                                         handleTextInputChange(
                                             text,
@@ -328,7 +336,7 @@ const ChangePasswordScreen = () => {
                             }}
                         >
                             <CommonButton
-                                btnTitle="Change Password"
+                                btnTitle= {translations[currentLanguage].chnagePassword}
                                 onPress={handleChangePassword}
                                 disabled={isLoading}
                             />

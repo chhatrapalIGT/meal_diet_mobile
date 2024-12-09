@@ -10,6 +10,8 @@ import COLORS from "../constants/colors";
 import { Image } from "react-native";
 import { images } from "../Resource/Images";
 import { TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
+import { translations } from "../Language";
 
 const styles = StyleSheet.create({
     genderContainer: { flex: 1 },
@@ -29,7 +31,9 @@ const styles = StyleSheet.create({
         color: COLORS.black,
         fontFamily: "Inter_300Light",
     },
-    genderSubTitleView: { marginBottom: hp(11.25) },
+    // genderSubTitleView: { marginBottom: hp(11.25) },
+    genderSubTitleView: { marginBottom: hp(5) },
+
     genderSubTitleText: {
         fontSize: RFPercentage(1.8),
         color: COLORS.black,
@@ -59,6 +63,8 @@ const styles = StyleSheet.create({
     },
 });
 const GenderComponent = ({ handleSelectGender }) => {
+ const currentLanguage = useSelector((state) => state.language.language);
+
     const [gender, setGender] = useState("");
     const [genderError, setGenderError] = useState("");
 
@@ -103,13 +109,16 @@ const GenderComponent = ({ handleSelectGender }) => {
             <View style={styles.genderMainContent}>
                 <View style={styles.genderTitleView}>
                     <Text style={styles.genderTitleText}>
-                        What’s your gender of birth?{" "}
+                        {translations[currentLanguage].whatIsYourSexAtBirth}
+                        {/* What’s your gender of birth?{" "} */}
                     </Text>
                 </View>
                 <View style={styles.genderSubTitleView}>
                     <Text style={styles.genderSubTitleText}>
-                        (a short paragraph explaining why this is relevant to
-                        ask..)
+                        {translations[currentLanguage].whatIsYourSexAtBirthParagraph}
+
+                        {/* (a short paragraph explaining why this is relevant to
+                        ask..) */}
                     </Text>
                 </View>
                 <View
@@ -125,7 +134,7 @@ const GenderComponent = ({ handleSelectGender }) => {
                             setGender("Female");
                             setGenderError("");
                         }}
-                        title="Female"
+                        title={translations[currentLanguage].female}
                         genderImg={
                             gender === "Female"
                                 ? images.activeFemaleSymbol
@@ -154,7 +163,7 @@ const GenderComponent = ({ handleSelectGender }) => {
                             setGender("Male");
                             setGenderError("");
                         }}
-                        title="Male"
+                        title={translations[currentLanguage].male}
                         genderImg={
                             gender === "Male"
                                 ? images.activeMaleSymbol
@@ -185,7 +194,7 @@ const GenderComponent = ({ handleSelectGender }) => {
             </View>
             <View style={styles.genderFooter}>
                 <CommonButton
-                    btnTitle="Next"
+                    btnTitle={translations[currentLanguage].next}
                     onPress={() => {
                         if (gender === "") {
                             setGenderError(

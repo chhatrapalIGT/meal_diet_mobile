@@ -17,6 +17,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import HomeScreenMainComponent from "../Components/Home/HomeScreenMainComponent";
 import { ActivityIndicator } from "react-native";
 import showToast from "../Components/Core/CustomTost";
+import { useSelector } from "react-redux";
+import { translations } from "../Language";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -30,6 +32,8 @@ const styles = StyleSheet.create({
     },
 });
 const SOSScreen = () => {
+  const currentLanguage = useSelector((state) => state.language.language);
+
     const { navigate } = useNavigation();
     const [mealList, setMealList] = useState([]);
     const [selectedDate] = useState(new Date());
@@ -85,11 +89,17 @@ const SOSScreen = () => {
                         des = `${des}\n${item.name}-${item.quantity}`;
                     });
                     data.description = des;
-                    if (data.Meal === "Snack 1") {
-                        data.Meal = "Morning snack";
-                    } else if (data.Meal === "Snack 2") {
-                        data.Meal = "Afternoon snack";
-                    }
+                    if (data.Meal === "Breakfast") {
+                        data.Meal = translations[currentLanguage].breakfast;
+                      } else if (data.Meal === "Snack 1") {
+                        data.Meal = translations[currentLanguage].morningSnack;
+                      } else if (data.Meal === "Lunch") {
+                        data.Meal = translations[currentLanguage].lunch;
+                      } else if (data.Meal === "Snack 2") {
+                        data.Meal = translations[currentLanguage].afternoonSnack;
+                      } else if (data.Meal === "Dinner") {
+                        data.Meal = translations[currentLanguage].dinner;
+                      }
 
                     return data;
                 });

@@ -26,6 +26,8 @@ import { getUrl } from "../Network/url";
 import { post } from "../Network/request";
 import showToast from "./Core/CustomTost";
 import ForgotPassword from "./ForgotPassword";
+import { useSelector } from "react-redux";
+import { translations } from "../Language";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -75,6 +77,8 @@ const styles = StyleSheet.create({
     },
 });
 const LoginComponent = ({ handleCloseSlider }) => {
+    const currentLanguage = useSelector((state) => state.language.language);
+
     const navigation = useNavigation();
     const { navigate } = navigation;
     const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -178,12 +182,12 @@ const LoginComponent = ({ handleCloseSlider }) => {
         >
             <View>
                 <View style={styles.mainContainer}>
-                    <Text style={styles.loginHeader}>Hello again! </Text>
+                    <Text style={styles.loginHeader}>{translations[currentLanguage].helloAgain}</Text>
 
                     <CustomInput
                         leftIconName={images.mailIcon}
                         leftIconStyles={styles.emailIcon}
-                        placeholder="E-mail"
+                        placeholder={translations[currentLanguage].email}
                         onChangeText={(text) =>
                             handleTextInputChange(text, "email")
                         }
@@ -207,7 +211,7 @@ const LoginComponent = ({ handleCloseSlider }) => {
                                 ? styles.openEyeIcon
                                 : styles.closedEyeIcon
                         }
-                        placeholder="Password"
+                        placeholder={translations[currentLanguage].password}
                         onChangeText={(text) =>
                             handleTextInputChange(text, "password")
                         }
@@ -223,26 +227,26 @@ const LoginComponent = ({ handleCloseSlider }) => {
                         <Text style={styles.errorText}>{passwordErr}</Text>
                     )}
                     <View style={styles.textWithForgotPasswordLinkTextView}>
-                        <Text style={styles.simpleText}>Forgot password?</Text>
+                        <Text style={styles.simpleText}>{translations[currentLanguage].forgotPasswordText}</Text>
                         <Pressable onPress={() => setModalVisible(true)}>
                             <Text style={styles.linkText}>
-                                {` Change password `}
+                                {` ${translations[currentLanguage].chnagePassword} `}
                             </Text>
                         </Pressable>
                     </View>
                 </View>
                 <View style={styles.footerContainer}>
                     <CommonButton
-                        btnTitle="Login"
+                        btnTitle={translations[currentLanguage].login}
                         onPress={handleLogin}
                         disabled={isLoading}
                     />
                     <View style={styles.textWithSignupLinkTextView}>
                         <Text style={styles.simpleText}>
-                            You don’t have an account?
+                            {translations[currentLanguage].youDoNotHaveaccount}
                         </Text>
                         <Pressable onPress={handleRedirectSignup}>
-                            <Text style={styles.linkText}>{` Sign up`}</Text>
+                            <Text style={styles.linkText}>{` ${translations[currentLanguage].signup}`}</Text>
                         </Pressable>
                     </View>
                 </View>

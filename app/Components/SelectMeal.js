@@ -7,6 +7,8 @@ import {
 import { RFPercentage } from "react-native-responsive-fontsize";
 import CommonButton from "./Core/CommonButton";
 import COLORS from "../constants/colors";
+import { translations } from "../Language";
+import { useSelector } from "react-redux";
 
 const styles = StyleSheet.create({
     selectMealContainer: { flex: 1, marginTop: hp(18.12) },
@@ -40,14 +42,33 @@ const SelectMeal = ({
     mainFooterStyle,
     selectedMeal = [],
 }) => {
+    const currentLanguage = useSelector((state) => state.language.language);
+    // const intialMealData = [
+    //     translations[currentLanguage].breakfast,
+    //     translations[currentLanguage].morningSnack,
+    //     translations[currentLanguage].lunch,
+    //     translations[currentLanguage].afternoonSnack,
+    //     translations[currentLanguage].dinner,
+    // ];
     const intialMealData = [
-        "Breakfast",
-        "Morning snack",
-        "Lunch",
-        "Afternoon snack",
-        "Dinner",
-    ];
-    const mealData = selectedMeal.length === 0 ? intialMealData : selectedMeal;
+        { label: translations[currentLanguage].breakfast, value: "Breakfast" },
+        {
+          label: translations[currentLanguage].morningSnack,
+          value: "Morning Snack",
+        },
+        { label: translations[currentLanguage].lunch, value: "Lunch" },
+        {
+          label: translations[currentLanguage].afternoonSnack,
+          value: "Afternoon Snack",
+        },
+        { label: translations[currentLanguage].dinner, value: "Dinner" },
+      ];
+      const mealData =
+        selectedMeal.length === 0
+          ? intialMealData
+          : intialMealData.filter((item) => selectedMeal.includes(item.value));
+    
+    
     const [selectedFoodGroupList, setSelectedFoodGroupList] = useState([]);
     const handleMealButtonPress = (meal) => {
         if (selectedFoodGroupList.includes(meal)) {
@@ -65,8 +86,8 @@ const SelectMeal = ({
                 <View style={styles.selectMealTitleView}>
                     <Text style={styles.selectMealTitleText}>
                         {selectedMeal.length === 0
-                            ? "Which meals do you usually have?"
-                            : "Selected Meals"}
+                            ? translations[currentLanguage].mealListHeader
+                            :  translations[currentLanguage].selectedMealsText}
                     </Text>
                 </View>
                 <View>
@@ -77,13 +98,13 @@ const SelectMeal = ({
                                     <TouchableOpacity
                                         key={`meal-${index}`}
                                         onPress={() =>
-                                            handleMealButtonPress(meal)
+                                            handleMealButtonPress(meal.value)
                                         }
                                         style={{
                                             ...styles.selectMealMainView,
                                             backgroundColor:
                                                 selectedFoodGroupList.includes(
-                                                    meal
+                                                    meal.value
                                                 )
                                                     ? COLORS.active
                                                     : COLORS.white,
@@ -94,13 +115,13 @@ const SelectMeal = ({
                                                 fontSize: RFPercentage(2.4),
                                                 fontFamily: "Inter_700Bold",
                                                 color: selectedFoodGroupList.includes(
-                                                    meal
+                                                    meal.value
                                                 )
                                                     ? COLORS.white
                                                     : COLORS.greyText,
                                             }}
                                         >
-                                            {meal}
+                                            {meal.label}
                                         </Text>
                                     </TouchableOpacity>
                                 ) : (
@@ -118,7 +139,7 @@ const SelectMeal = ({
                                                 color: COLORS.white,
                                             }}
                                         >
-                                            {meal}
+                                            {meal.label}
                                         </Text>
                                     </View>
                                 )}
@@ -135,23 +156,32 @@ const SelectMeal = ({
                 }}
             >
                 <CommonButton
-                    btnTitle="Next"
+                    btnTitle={translations[currentLanguage].next}
                     onPress={() => {
                         const newUpdateData =
                             selectedMeal.length === 0
                                 ? selectedFoodGroupList
                                 : selectedMeal;
-                        const sortedArray = newUpdateData.sort(
-                            (a, b) =>
-                                intialMealData.indexOf(a) -
-                                intialMealData.indexOf(b)
-                        );
+                        const orderMap = intialMealData.map((item) => item.value);
+                        newUpdateData.sort((a, b) => orderMap.indexOf(a) - orderMap.indexOf(b));
                         handleSelectMeal(
-                            sortedArray.length === 0
+                            newUpdateData.length === 0
                                 ? intialMealData
-                                : sortedArray
+                                : newUpdateData
                         );
                         setSelectedFoodGroupList([]);
+                        // const sortedArray = newUpdateData.sort(
+                        //     (a, b) =>
+                        //         intialMealData.indexOf(a) -
+                        //         intialMealData.indexOf(b)
+                        // );
+                        // console.log("sortedArray", sortedArray);
+                        // handleSelectMeal(
+                        //     sortedArray.length === 0
+                        //         ? intialMealData
+                        //         : sortedArray
+                        // );
+                        
                     }}
                 />
             </View>

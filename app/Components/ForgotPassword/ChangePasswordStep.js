@@ -10,6 +10,8 @@ import CommonButton from "../Core/CommonButton";
 import { images } from "../../Resource/Images";
 import COLORS from "../../constants/colors";
 import { passwordValidation } from "../../utils/validation";
+import { useSelector } from "react-redux";
+import { translations } from "../../Language";
 
 const styles = StyleSheet.create({
     mainWapper: {
@@ -36,6 +38,7 @@ const styles = StyleSheet.create({
 });
 
 const ChangePasswordStep = ({ handleSubmit }) => {
+    const currentLanguage = useSelector((state) => state.language.language);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
@@ -110,7 +113,7 @@ const ChangePasswordStep = ({ handleSubmit }) => {
 
     return (
         <View style={styles.mainWapper}>
-            <Text style={styles.headerText}>Enter new password</Text>
+            <Text style={styles.headerText}>{translations[currentLanguage].enterNewPassword}</Text>
             <View>
                 <CustomInput
                     leftIconName={images.passwordIcon}
@@ -125,7 +128,7 @@ const ChangePasswordStep = ({ handleSubmit }) => {
                             ? styles.openEyeIcon
                             : styles.closedEyeIcon
                     }
-                    placeholder="Password"
+                    placeholder={translations[currentLanguage].password}
                     onChangeText={(text) =>
                         handleTextInputChange(text, "password")
                     }
@@ -155,7 +158,7 @@ const ChangePasswordStep = ({ handleSubmit }) => {
                             ? styles.openEyeIcon
                             : styles.closedEyeIcon
                     }
-                    placeholder="Confirm Password"
+                    placeholder={translations[currentLanguage].confirmPassword}
                     onChangeText={(text) =>
                         handleTextInputChange(text, "confirmPassword")
                     }
@@ -174,7 +177,7 @@ const ChangePasswordStep = ({ handleSubmit }) => {
             </View>
             <CommonButton
                 onPress={handleSubmitPassword}
-                btnTitle="Confirm"
+                btnTitle={translations[currentLanguage].confirmText}
                 btnContainerStyle={styles.btnStyle}
             />
         </View>
