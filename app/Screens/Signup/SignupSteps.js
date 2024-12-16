@@ -243,30 +243,28 @@ const SignupSteps = () => {
         ]
       : []),
     {
+      // id: 6,
+      // component: (
+      //   <LanguageComponent
+      //     bottomContentCustomStyle={{ marginTop: 25 }}
+      //     handleSelectValue={(value, lang) => {
+      //       // dispatch(setLanguage(lang));
+      //       setStepsSignupData({
+      //         ...stepsSignupData,
+      //         languagePreference: value,
+      //       });
+      //     }}
+      //     selectedValue={stepsSignupData.languagePreference}
+      //     handleNext={() => {
+      //       if (stepsSignupData.isSelectedDietaryRestriction) {
+      //         setActiveSlide(6);
+      //       } else {
+      //         setActiveSlide(5);
+      //       }
+      //     }}
+      //   />
+      // ),
       id: 6,
-      component: (
-        <LanguageComponent
-          bottomContentCustomStyle={{ marginTop: 25 }}
-          handleSelectValue={(value, lang) => {
-            // dispatch(setLanguage(lang));
-            setStepsSignupData({
-              ...stepsSignupData,
-              languagePreference: value,
-            });
-          }}
-          selectedValue={stepsSignupData.languagePreference}
-          handleNext={() => {
-            if (stepsSignupData.isSelectedDietaryRestriction) {
-              setActiveSlide(6);
-            } else {
-              setActiveSlide(5);
-            }
-          }}
-        />
-      ),
-    },
-    {
-      id: 7,
       component: (
         <TermsAndCondition
           isLoading={isLoading}
@@ -339,6 +337,80 @@ const SignupSteps = () => {
         />
       ),
     },
+    // {
+    //   id: 7,
+    //   component: (
+    //     <TermsAndCondition
+    //       isLoading={isLoading}
+    //       handleTermsAndCondition={async (value) => {
+    //         setStepsSignupData({
+    //           ...stepsSignupData,
+    //           isTermAndCondition: value,
+    //         });
+    //         try {
+    //           setIsLoading(true);
+    //           const payload = {
+    //             username: userData.username,
+    //             email: userData.email,
+    //             password: userData.password,
+    //             confirmPassword: userData.password,
+    //             gender: stepsSignupData.gender,
+    //             termsAndConditions: value,
+    //             dietType: stepsSignupData.dietType,
+    //             isDietaryRestrictions:
+    //               stepsSignupData.isSelectedDietaryRestriction,
+    //             dietaryRestrictions: stepsSignupData.dietaryRestrictions,
+    //             languagePreference: stepsSignupData.languagePreference,
+    //           };
+    //           delete payload.dietTypeErr;
+    //           const url = getUrl("register");
+    //           const res = await post(url, payload);
+    //           const { success, message, data } = res;
+    //           if (success) {
+    //             setIsLoading(false);
+    //             if (stepsSignupData.languagePreference === "Italian") {
+    //               dispatch(setLanguage("it"));
+    //               AsyncStorage.setItem("lang", "it");
+    //             } else if (stepsSignupData.languagePreference === "Swedish") {
+    //               dispatch(setLanguage("sv"));
+    //               AsyncStorage.setItem("lang", "sv");
+    //             } else if (stepsSignupData.languagePreference === "English") {
+    //               dispatch(setLanguage("en", "en"));
+    //             }
+    //             await AsyncStorage.setItem(
+    //               "userToken",
+    //               JSON.stringify(data.authToken)
+    //             );
+    //             await AsyncStorage.setItem(
+    //               "selectedMeal",
+    //               JSON.stringify(stepsSignupData.selectedMeals)
+    //             );
+    //             showToast("success", message);
+    //             setTimeout(() => {
+    //               navigate("HomeTabs", {
+    //                 screen: "Planner",
+    //                 params: {
+    //                   selectedItems: stepsSignupData.selectedMeals,
+    //                 },
+    //               });
+    //             }, 1000);
+    //           } else {
+    //             setIsLoading(false);
+    //             showToast("error", message);
+    //           }
+    //         } catch (error) {
+    //           setIsLoading(false);
+    //           showToast("error", "Internal server error.");
+    //         }
+    //       }}
+    //       mainContainerStyle={{
+    //         marginTop: hp(21.56),
+    //       }}
+    //       mainContentStyle={{ flex: 4 }}
+    //       mainFooterStyle={{ flex: 2 }}
+    //     />
+    //   ),
+    // },
   ];
 
   return (

@@ -17,7 +17,7 @@ import { images } from "../../Resource/Images";
 import COLORS from "../../constants/colors";
 import { TouchableOpacity } from "react-native";
 import CommonButton from "../../Components/Core/CommonButton";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { getUrl } from "../../Network/url";
 import { get, post } from "../../Network/request";
 import { useDispatch, useSelector } from "react-redux";
@@ -96,6 +96,8 @@ const styles = StyleSheet.create({
   },
 });
 const Language = () => {
+  const route = useRoute();
+  const { firstTime } = route.params;
   const dispatch = useDispatch();
   const { navigate } = useNavigation();
   const [selectedDietaryOptions, setSelectedDietaryOptions] = useState("");
@@ -111,39 +113,69 @@ const Language = () => {
     setSelectedDietaryOptions(data.user.languagePreference);
   };
   const handleLanguageUpdate = async () => {
-    try {
-      setIsLoading(true);
-      const payload = {
-        languagePreference: selectedDietaryOptions,
-      };
-      const url = getUrl("updatedProfile");
-      const res = await post(url, payload);
-      const { success, data, message } = res;
-      setIsLoading(false);
-      if (success) {
-        if (data.updatedUser.languagePreference === "Italian") {
-          dispatch(setLanguage("it"));
-          AsyncStorage.setItem("lang", "it");
-        } else if (data.updatedUser.languagePreference === "Swedish") {
-          dispatch(setLanguage("sv"));
-          AsyncStorage.setItem("lang", "sv");
-        } else if (data.updatedUser.languagePreference === "English") {
-          dispatch(setLanguage("en"));
-          AsyncStorage.setItem("lang", "en");
-        }
-        navigate("HomeTabs", {
-          screen: "Settings",
-        });
-      } else {
-        showToast("error", message);
+    if (firstTime) {
+      if (selectedDietaryOptions === "Italian") {
+        dispatch(setLanguage("it"));
+        AsyncStorage.setItem("lang", "it");
+      } else if (selectedDietaryOptions === "Swedish") {
+        dispatch(setLanguage("sv"));
+        AsyncStorage.setItem("lang", "sv");
+      } else if (selectedDietaryOptions === "English") {
+        dispatch(setLanguage("en"));
+        AsyncStorage.setItem("lang", "en");
       }
-    } catch (error) {
-      setIsLoading(false);
-      showToast("error", "Internal server error.");
+      navigate("Welcome");
+    } else {
+      try {
+        setIsLoading(true);
+        const payload = {
+          languagePreference: selectedDietaryOptions,
+        };
+        const url = getUrl("updatedProfile");
+        const res = await post(url, payload);
+        const { success, data, message } = res;
+        setIsLoading(false);
+        if (success) {
+          if (data.updatedUser.languagePreference === "Italian") {
+            dispatch(setLanguage("it"));
+            AsyncStorage.setItem("lang", "it");
+          } else if (data.updatedUser.languagePreference === "Swedish") {
+            dispatch(setLanguage("sv"));
+            AsyncStorage.setItem("lang", "sv");
+          } else if (data.updatedUser.languagePreference === "English") {
+            dispatch(setLanguage("en"));
+            AsyncStorage.setItem("lang", "en");
+          }
+          navigate("HomeTabs", {
+            screen: "Settings",
+          });
+        } else {
+          showToast("error", message);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        showToast("error", "Internal server error.");
+      }
     }
   };
+  const handleSetLanguage = async () => {
+    const localStoreLang = await AsyncStorage.getItem("lang");    
+    if (localStoreLang) {
+      dispatch(setLanguage(localStoreLang));
+      navigate("Welcome")
+    } 
+    // else {
+    //   const { country, language } = getCountryLanguage(); // Get the country code
+    //   const localLanguage = getLocalLanguage(country);
+    //   dispatch(setLanguage(localLanguage));
+    // }
+  };
   useEffect(() => {
-    getProfile();
+    if (firstTime) {
+      handleSetLanguage()
+    }else{
+      getProfile()
+    }
   }, []);
   return (
     <SafeAreaView style={styles.mainWelcomeContainer}>

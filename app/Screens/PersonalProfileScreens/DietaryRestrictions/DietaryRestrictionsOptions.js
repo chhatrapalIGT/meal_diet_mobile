@@ -102,7 +102,7 @@ const DietaryRestrictionsOptions = () => {
       const { success, data, message } = res;
       setIsLoading(false);
       if (success) {
-        navigate("Language");
+        navigate("Language", { firstTime: false });
       } else {
         showToast("error", message);
       }

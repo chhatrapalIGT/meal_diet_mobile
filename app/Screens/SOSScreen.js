@@ -55,17 +55,17 @@ const SOSScreen = () => {
             await AsyncStorage.getItem("selectedMeal")
         );
         const updatedSelectedItems = selectedMeals.map((item) => item);
-        if (updatedSelectedItems.includes("Morning snack")) {
+        if (updatedSelectedItems.includes("Morning Snack")) {
             const findMSnackIndex = updatedSelectedItems.findIndex(
-                (item) => item === "Morning snack"
+                (item) => item === "Morning Snack"
             );
             if (findMSnackIndex > -1) {
                 updatedSelectedItems[findMSnackIndex] = "Snack 1";
             }
         }
-        if (updatedSelectedItems.includes("Afternoon snack")) {
+        if (updatedSelectedItems.includes("Afternoon Snack")) {
             const findASnackIndex = updatedSelectedItems.findIndex(
-                (item) => item === "Afternoon snack"
+                (item) => item === "Afternoon Snack"
             );
             if (findASnackIndex > -1) {
                 updatedSelectedItems[findASnackIndex] = "Snack 2";
@@ -128,7 +128,7 @@ const SOSScreen = () => {
 
     useEffect(() => {
         getDaywiseFoodgroup();
-    }, []);
+    }, [currentLanguage]);
     useFocusEffect(
         React.useCallback(() => {
             setIsShowSOSModal(true);

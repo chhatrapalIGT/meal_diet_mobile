@@ -79,17 +79,17 @@ const HomeScreen = () => {
     ];
     let day = days[selectedDate.getDay()];
     const updatedSelectedItems = selectedItems.map((item) => item);
-    if (updatedSelectedItems.includes("Morning snack")) {
+    if (updatedSelectedItems.includes("Morning Snack")) {      
       const findMSnackIndex = updatedSelectedItems.findIndex(
-        (item) => item === "Morning snack"
+        (item) => item === "Morning Snack"
       );
       if (findMSnackIndex > -1) {
         updatedSelectedItems[findMSnackIndex] = "Snack 1";
       }
     }
-    if (updatedSelectedItems.includes("Afternoon snack")) {
+    if (updatedSelectedItems.includes("Afternoon Snack")) {
       const findASnackIndex = updatedSelectedItems.findIndex(
-        (item) => item === "Afternoon snack"
+        (item) => item === "Afternoon Snack"
       );
       if (findASnackIndex > -1) {
         updatedSelectedItems[findASnackIndex] = "Snack 2";
@@ -143,7 +143,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     getDaywiseFoodgroup();
-  }, [selectedDate, selectedItems]);
+  }, [selectedDate, selectedItems, currentLanguage]);
 
   const handleSheetChange = useCallback((index) => {
     if (index === -1) {

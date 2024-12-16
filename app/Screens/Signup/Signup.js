@@ -73,10 +73,6 @@ const Signup = () => {
     const navigation = useNavigation();
     const { navigate } = navigation;
     const sheetRef = useRef(null);
-    // const [username, setUsername] = useState("Test");
-    // const [email, setEmail] = useState("kajal@email.com");
-    // const [password, setPassword] = useState("Kajal@1234");
-    // const [confirmPassword, setConfirmPassword] = useState("Kajal@1234");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

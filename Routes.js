@@ -16,54 +16,48 @@ import TypesOfDietScreen from "./app/Screens/PersonalProfileScreens/TypesOfDiet"
 import DietaryRestrictionsScreen from "./app/Screens/PersonalProfileScreens/DietaryRestrictions/DietaryRestrictions";
 import DietaryRestrictionsOptionsScreen from "./app/Screens/PersonalProfileScreens/DietaryRestrictions/DietaryRestrictionsOptions";
 import LanguageScreen from "./app/Screens/PersonalProfileScreens/Language";
-import { setLanguage } from "./app/store/Slices/languageSlice";
-import { useDispatch } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { setLanguage } from "./app/store/Slices/languageSlice";
+// import { useDispatch } from "react-redux";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 
-const getCountryLanguage = () => {
-  // Extract locale and country
-  const { locale, country } = Localization;
-  return {
-    language: locale.split("-")[0],
-    country: country || locale.split("-")[1],
-  };
-};
-const countryLanguageMap = {
-  // US: "English",
-  // IN: "Hindi",
-  // IT: 'Italian',
-  // SE: 'Swedish',
-  US: "en",
-  // IN: "en",
-  IT: "it",
-  SE: "sv",
-  // Add more mappings as needed
-};
+// const getCountryLanguage = () => {
+//   // Extract locale and country
+//   const { locale, country } = Localization;
+//   return {
+//     language: locale.split("-")[0],
+//     country: country || locale.split("-")[1],
+//   };
+// };
+// const countryLanguageMap = {
+//   US: "en",
+//   IT: "it",
+//   SE: "sv",
+// };
 
-const getLocalLanguage = (countryCode) => {
-  return countryLanguageMap[countryCode] || "en"; // Default to English
-};
+// const getLocalLanguage = (countryCode) => {
+//   return countryLanguageMap[countryCode] || "en"; // Default to English
+// };
 const Routes = () => {
-  const dispatch = useDispatch();
-  const handleSetLanguage = async () => {
-    const localStoreLang = await AsyncStorage.getItem("lang");
-    if (localStoreLang) {
-      dispatch(setLanguage(localStoreLang));
-    } else {
-      const { country, language } = getCountryLanguage(); // Get the country code
-      const localLanguage = getLocalLanguage(country);
-      dispatch(setLanguage(localLanguage));
-    }
-  };
-  useEffect(() => {
-    handleSetLanguage();
-  }, []);
+  // const dispatch = useDispatch();
+  // const handleSetLanguage = async () => {
+  //   const localStoreLang = await AsyncStorage.getItem("lang");
+  //   if (localStoreLang) {
+  //     dispatch(setLanguage(localStoreLang));
+  //   } else {
+  //     const { country, language } = getCountryLanguage(); // Get the country code
+  //     const localLanguage = getLocalLanguage(country);
+  //     dispatch(setLanguage(localLanguage));
+  //   }
+  // };
+  // useEffect(() => {
+  //   handleSetLanguage();
+  // }, []);
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome">
+      <Stack.Navigator initialRouteName="Language">
         <Stack.Screen
           name="Welcome"
           component={Welcome}
@@ -147,6 +141,7 @@ const Routes = () => {
           options={{
             headerShown: false,
           }}
+          initialParams={{ firstTime: true}}
         />
       </Stack.Navigator>
     </NavigationContainer>

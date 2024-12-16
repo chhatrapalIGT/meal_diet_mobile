@@ -237,4 +237,8 @@ const HomeScreenMainComponent = ({
   );
 };
 
-export default HomeScreenMainComponent;
+// export default HomeScreenMainComponent;
+export default React.memo(HomeScreenMainComponent, (prevProps, nextProps) => {
+  // Custom comparison function
+  return prevProps.mealList === nextProps.mealList; // Only re-render if `data` changes
+});

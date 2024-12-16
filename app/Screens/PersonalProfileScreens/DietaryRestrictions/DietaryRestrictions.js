@@ -95,7 +95,7 @@ const Index = ({ mainContainerStyle = {}, mainFooterStyle = {} }) => {
         if (data.updatedUser.isDietaryRestrictions) {
           navigate("DietaryRestrictionsOptions");
         } else {
-          navigate("Language");
+          navigate("Language", { firstTime: false });
         }
       } else {
         showToast("error", message);
