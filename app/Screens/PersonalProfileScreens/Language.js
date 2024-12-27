@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   },
 });
 const Language = () => {
+  const currentLanguage = useSelector((state) => state.language.language);
   const route = useRoute();
   const { firstTime } = route.params;
   const dispatch = useDispatch();
@@ -146,15 +147,13 @@ const Language = () => {
             dispatch(setLanguage("en"));
             AsyncStorage.setItem("lang", "en");
           }
-          navigate("HomeTabs", {
-            screen: "Settings",
-          });
+          navigate("typeOfDiet")
         } else {
           showToast("error", message);
         }
       } catch (error) {
         setIsLoading(false);
-        showToast("error", "Internal server error.");
+        showToast("error", translations[currentLanguage].internalServerError);
       }
     }
   };
@@ -170,13 +169,13 @@ const Language = () => {
     //   dispatch(setLanguage(localLanguage));
     // }
   };
-  useEffect(() => {
+  useEffect(() => {    
     if (firstTime) {
       handleSetLanguage()
     }else{
       getProfile()
     }
-  }, []);
+  }, [firstTime]);
   return (
     <SafeAreaView style={styles.mainWelcomeContainer}>
       <ImageBackground

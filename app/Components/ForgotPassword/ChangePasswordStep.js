@@ -51,12 +51,10 @@ const ChangePasswordStep = ({ handleSubmit }) => {
             case "password":
                 if (value === "") {
                     setPassword("");
-                    setPasswordError("Password is required");
+                    setPasswordError(translations[currentLanguage].passwordIsRequired);
                 } else if (passwordValidation(value)) {
                     setPassword(value);
-                    setPasswordError(
-                        "Password must be atleast 8 characters, contain 2 numbers, and have 1 special character"
-                    );
+                    setPasswordError(translations[currentLanguage].validPassword);
                 } else {
                     setPasswordError("");
                     setPassword(value);
@@ -64,12 +62,10 @@ const ChangePasswordStep = ({ handleSubmit }) => {
                 break;
             case "confirmPassword":
                 if (value === "") {
-                    setConfirmPasswordError("Confirm Password is required");
+                    setConfirmPasswordError(translations[currentLanguage].confirmPasswordIsRequired);
                     setConfirmPassword("");
                 } else if (value !== password) {
-                    setConfirmPasswordError(
-                        "Password and Confirm Password not same"
-                    );
+                    setConfirmPasswordError(translations[currentLanguage].passwordAndConfirmPasswordNotSame);
                     setConfirmPassword(value);
                 } else {
                     setConfirmPasswordError("");
@@ -83,19 +79,17 @@ const ChangePasswordStep = ({ handleSubmit }) => {
     const isValidateForm = () => {
         let isValid = true;
         if (password === "") {
-            setPasswordError("Password is required");
+            setPasswordError(translations[currentLanguage].passwordIsRequired);
             isValid = false;
         } else if (passwordValidation(password)) {
-            setPasswordError(
-                "Password must be atleast 8 characters, contain 2 numbers, and have 1 special character"
-            );
+            setPasswordError(translations[currentLanguage].validPassword);
             isValid = false;
         }
         if (confirmPassword === "") {
-            setConfirmPasswordError("Confirm Password is required");
+            setConfirmPasswordError(translations[currentLanguage].confirmPasswordIsRequired);
             isValid = false;
         } else if (confirmPassword !== password) {
-            setConfirmPasswordError("Password and Confirm Password not same");
+            setConfirmPasswordError(translations[currentLanguage].passwordAndConfirmPasswordNotSame);
             isValid = false;
         }
         return isValid;

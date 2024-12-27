@@ -1,4 +1,5 @@
 import React from "react";
+import * as Sentry from '@sentry/react-native';
 import { View, StatusBar, ActivityIndicator } from "react-native";
 import Toast from "react-native-toast-message";
 import { useFonts } from "expo-font";
@@ -18,17 +19,17 @@ import { Provider } from "react-redux";
 import store from "./app/store";
 import Routes from "./Routes";
 
-// Sentry.init({
-//   dsn: "https://973df241877ce7414eb140408eb39dba@o4506988063621120.ingest.us.sentry.io/4507383862132736",
-//   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-//   // We recommend adjusting this value in production.
-//   tracesSampleRate: 1.0,
-//   _experiments: {
-//     // profilesSampleRate is relative to tracesSampleRate.
-//     // Here, we'll capture profiles for 100% of transactions.
-//     profilesSampleRate: 1.0,
-//   },
-// });
+Sentry.init({
+  dsn: "https://973df241877ce7414eb140408eb39dba@o4506988063621120.ingest.us.sentry.io/4507383862132736",
+  // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+  // We recommend adjusting this value in production.
+  tracesSampleRate: 1.0,
+  _experiments: {
+    // profilesSampleRate is relative to tracesSampleRate.
+    // Here, we'll capture profiles for 100% of transactions.
+    profilesSampleRate: 1.0,
+  },
+});
 
 const App = () => {
   const [fontsLoaded] = useFonts({

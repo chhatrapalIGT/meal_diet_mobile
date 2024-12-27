@@ -110,7 +110,7 @@ const SOSScreen = () => {
             }
         } catch (error) {
             setIsLoading(false);
-            showToast("error", "Internal server error.");
+            showToast("error", translations[currentLanguage].internalServerError);
         }
     };
     const handleCloseSOS = async () => {

@@ -89,7 +89,7 @@ const Signup = () => {
             case "username":
                 if (value === "") {
                     setUsername("");
-                    setUsernameError("Name is required");
+                    setUsernameError(translations[currentLanguage].nameIsRequired);
                 } else {
                     setUsernameError("");
                     setUsername(value);
@@ -98,9 +98,9 @@ const Signup = () => {
             case "email":
                 if (value === "") {
                     setEmail("");
-                    setEmailError("Email address is required");
+                    setEmailError(translations[currentLanguage].emailIsRequired);
                 } else if (emailValidation(email)) {
-                    setEmailError("Please enter valid email address");
+                    setEmailError(translations[currentLanguage].validEmail);
                     setEmail(value);
                 } else {
                     setEmailError("");
@@ -110,12 +110,10 @@ const Signup = () => {
             case "password":
                 if (value === "") {
                     setPassword("");
-                    setPasswordError("Password is required");
+                    setPasswordError(translations[currentLanguage].passwordIsRequired);
                 } else if (passwordValidation(value)) {
                     setPassword(value);
-                    setPasswordError(
-                        "Password must be atleast 8 characters, contain 2 numbers, and have 1 special character"
-                    );
+                    setPasswordError(translations[currentLanguage].validPassword);
                 } else {
                     setPasswordError("");
                     setPassword(value);
@@ -123,12 +121,10 @@ const Signup = () => {
                 break;
             case "confirmPassword":
                 if (value === "") {
-                    setConfirmPasswordError("Confirm Password is required");
+                    setConfirmPasswordError(translations[currentLanguage].confirmPasswordIsRequired);
                     setConfirmPassword("");
                 } else if (value !== password) {
-                    setConfirmPasswordError(
-                        "Password and Confirm Password not same"
-                    );
+                    setConfirmPasswordError(translations[currentLanguage].passwordAndConfirmPasswordNotSame);
                     setConfirmPassword(value);
                 } else {
                     setConfirmPasswordError("");
@@ -142,31 +138,29 @@ const Signup = () => {
     const isValidateForm = () => {
         let isValid = true;
         if (username === "") {
-            setUsernameError("Name is required");
+            setUsernameError(translations[currentLanguage].nameIsRequired);
             isValid = false;
         }
 
         if (email === "") {
-            setEmailError("Email address is required");
+            setEmailError(translations[currentLanguage].emailIsRequired);
             isValid = false;
         } else if (emailValidation(email)) {
-            setEmailError("Please enter valid email address");
+            setEmailError(translations[currentLanguage].validEmail);
             isValid = false;
         }
         if (password === "") {
-            setPasswordError("Password is required");
+            setPasswordError(translations[currentLanguage].passwordIsRequired);
             isValid = false;
         } else if (passwordValidation(password)) {
-            setPasswordError(
-                "Password must be atleast 8 characters, contain 2 numbers, and have 1 special character"
-            );
+            setPasswordError(translations[currentLanguage].validPassword);
             isValid = false;
         }
         if (confirmPassword === "") {
-            setConfirmPasswordError("Confirm Password is required");
+            setConfirmPasswordError(translations[currentLanguage].confirmPasswordIsRequired);
             isValid = false;
         } else if (confirmPassword !== password) {
-            setConfirmPasswordError("Password and Confirm Password not same");
+            setConfirmPasswordError(translations[currentLanguage].passwordAndConfirmPasswordNotSame);
             isValid = false;
         }
         return isValid;

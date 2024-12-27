@@ -13,6 +13,8 @@ import ChangePasswordStep from "./ChangePasswordStep";
 import { getUrl } from "../../Network/url";
 import { post } from "../../Network/request";
 import showToast from "../Core/CustomTost";
+import { translations } from "../../Language";
+import { useSelector } from "react-redux";
 
 const styles = StyleSheet.create({
     mainWrapper: {
@@ -58,6 +60,7 @@ const styles = StyleSheet.create({
 });
 
 const index = ({ handleClose }) => {
+    const currentLanguage = useSelector((state) => state.language.language);
     // Create references for the OTP inputs
     const [activeSlide, setActiveSlide] = useState(0);
     const [timeLeft, setTimeLeft] = useState(120);
@@ -91,7 +94,7 @@ const index = ({ handleClose }) => {
             } catch (error) {
                 setIsOptSendSuccess(false);
                 handleClose();
-                showToast("error", "Internal server error.", error);
+                showToast("error", translations[currentLanguage].internalServerError, error);
                 setIsLoading(false);
             }
         } else if (type === "resetPass") {
@@ -117,7 +120,7 @@ const index = ({ handleClose }) => {
                 }
             } catch (error) {
                 handleClose();
-                showToast("error", "Internal server error.", error);
+                showToast("error", translations[currentLanguage].internalServerError, error);
                 setIsOptSendSuccess(false);
                 setIsLoading(false);
             }

@@ -44,9 +44,9 @@ const VerifyEmailStep = ({ handleSubmit, isLoading }) => {
             case "email":
                 if (value === "") {
                     setEmail("");
-                    setEmailErr("Email address is required");
+                    setEmailErr(translations[currentLanguage].emailIsRequired);   
                 } else if (emailValidation(email)) {
-                    setEmailErr("Please enter valid email address");
+                    setEmailErr(translations[currentLanguage].validEmail);
                     setEmail(value);
                 } else {
                     setEmailErr("");
@@ -60,10 +60,10 @@ const VerifyEmailStep = ({ handleSubmit, isLoading }) => {
     const isValidateForm = () => {
         let isValid = true;
         if (email === "") {
-            setEmailErr("Email address is required");
+            setEmailErr(translations[currentLanguage].emailIsRequired);
             isValid = false;
         } else if (emailValidation(email)) {
-            setEmailErr("Please enter valid email address");
+            setEmailErr(translations[currentLanguage].validEmail);
             isValid = false;
         }
         return isValid;

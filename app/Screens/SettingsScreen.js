@@ -98,8 +98,8 @@ const SettingsScreen = () => {
               {translations[currentLanguage].settings}
             </Text>
             <View style={styles.settingMenuWapper}>
-              <Pressable style={styles.menuItemView}>
-                <Text style={styles.menuText}>
+              <Pressable style={styles.menuItemView} disabled>
+                <Text style={{...styles.menuText, opacity:0.3}}>
                   {translations[currentLanguage].accountSettings}
                 </Text>
               </Pressable>
@@ -129,7 +129,7 @@ const SettingsScreen = () => {
               </Pressable>
               <Pressable
                 style={styles.menuItemView}
-                onPress={() => navigate("typeOfDiet")}
+                onPress={() => navigate("Language", { firstTime: false })}
               >
                 <Text style={styles.menuText}>
                   {translations[currentLanguage].updatedYourInformation}

@@ -43,7 +43,7 @@ const SelectedMealListSceen = () => {
                     mainFooterStyle={{
                         justifyContent: "center",
                     }}
-                    handleSelectMeal={(selectedMeals) => {
+                    handleSelectMeal={(selectedMeals) => {                        
                         navigate("HomeTabs", {
                             screen: "Planner",
                             params: {

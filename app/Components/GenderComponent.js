@@ -197,9 +197,7 @@ const GenderComponent = ({ handleSelectGender }) => {
                     btnTitle={translations[currentLanguage].next}
                     onPress={() => {
                         if (gender === "") {
-                            setGenderError(
-                                "Please select gender as per your birth"
-                            );
+                            setGenderError(translations[currentLanguage].genederIsRequired)
                         } else {
                             setGenderError("");
                             handleSelectGender(gender);

@@ -94,7 +94,7 @@ const ChangePasswordScreen = () => {
             case "oldPassword":
                 if (value === "") {
                     setOldPassword("");
-                    setOldPasswordError("Old Password is required");
+                    setOldPasswordError(translations[currentLanguage].oldPasswordIsRequired)
                 } else {
                     setOldPassword(value);
                     setOldPasswordError("");
@@ -103,12 +103,10 @@ const ChangePasswordScreen = () => {
             case "password":
                 if (value === "") {
                     setPassword("");
-                    setPasswordError("New Password is required");
+                    setPasswordError(translations[currentLanguage].newPasswordIsRequired)
                 } else if (passwordValidation(value)) {
                     setPassword(value);
-                    setPasswordError(
-                        "New Password must be atleast 8 characters, contain 2 numbers, and have 1 special character"
-                    );
+                    setPasswordError(translations[currentLanguage].validPassword)
                 } else {
                     setPassword(value);
                     setPasswordError("");
@@ -117,11 +115,9 @@ const ChangePasswordScreen = () => {
             case "ConfirmPassword":
                 if (value === "") {
                     setConfirmPassword("");
-                    setConfirmPasswordError("New Confirm Password is required");
+                    setConfirmPasswordError(translations[currentLanguage].newConfirmPasswordIsRequired);
                 } else if (value !== password) {
-                    setConfirmPasswordError(
-                        "New Password and New Confirm Password not same"
-                    );
+                    setConfirmPasswordError(translations[currentLanguage].newPasswordAndnewConfirmPasswordNotSame);
                     setConfirmPassword(value);
                 } else {
                     setConfirmPassword(value);
@@ -136,25 +132,21 @@ const ChangePasswordScreen = () => {
     const isValidateForm = () => {
         let isValid = true;
         if (oldPassword === "") {
-            setOldPasswordError("Old Password is required");
+            setOldPasswordError(translations[currentLanguage].oldPasswordIsRequired)
             isValid = false;
         }
         if (password === "") {
-            setPasswordError("New Password is required");
+            setPasswordError(translations[currentLanguage].newPasswordIsRequired);
             isValid = false;
         } else if (passwordValidation(password)) {
-            setPasswordError(
-                "New Password must be atleast 8 characters, contain 2 numbers, and have 1 special character"
-            );
+            setPasswordError(translations[currentLanguage].validPassword)
             isValid = false;
         }
         if (confirmPassword === "") {
-            setConfirmPasswordError("New Confirm Password is required");
+            setConfirmPasswordError(translations[currentLanguage].newConfirmPasswordIsRequired);
             isValid = false;
         } else if (confirmPassword !== password) {
-            setConfirmPasswordError(
-                "New Password and New Confirm Password not same"
-            );
+            setConfirmPasswordError(translations[currentLanguage].newPasswordAndnewConfirmPasswordNotSame);
             isValid = false;
         }
         return isValid;
@@ -184,7 +176,7 @@ const ChangePasswordScreen = () => {
                 }
             } catch (error) {
                 setIsLoading(false);
-                showToast("error", "Internal server error.");
+                showToast("error", translations[currentLanguage].internalServerError);
             }
         }
     };

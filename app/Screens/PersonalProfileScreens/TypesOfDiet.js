@@ -121,12 +121,12 @@ const TypesOfDiet = ({ mainContainerStyle = {}, mainFooterStyle = {} }) => {
       }
     } catch (error) {
       setIsLoading(false);
-      showToast("error", "Internal server error.");
+      showToast("error", translations[currentLanguage].internalServerError);
     }
   };
   const handleUpdatedTypeOfDiet = () => {
     if (selectedDietaryOptions === "") {
-      setErrorTypeOfDiet("Type of diet is required");
+      setErrorTypeOfDiet(translations[currentLanguage].typeOfDietIsRequired)
     } else {
       handleUpdatedProfile();
     }

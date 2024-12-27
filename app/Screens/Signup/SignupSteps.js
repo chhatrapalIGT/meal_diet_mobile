@@ -64,7 +64,7 @@ const SignupSteps = () => {
     dietTypeErr: "",
     isSelectedDietaryRestriction: false,
     dietaryRestrictions: [],
-    languagePreference: "",
+    // languagePreference: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const stepsData = [
@@ -132,7 +132,7 @@ const SignupSteps = () => {
             } else {
               setStepsSignupData({
                 ...stepsSignupData,
-                dietTypeErr: "Type of diet is required",
+                dietTypeErr: translations[currentLanguage].typeOfDietIsRequired,
               });
             }
           }}
@@ -175,72 +175,72 @@ const SignupSteps = () => {
     },
     ...(stepsSignupData.isSelectedDietaryRestriction
       ? [
-          {
-            id: 5,
-            component: (
-              <ListUpdateProfile
-                listLabel={
-                  translations[currentLanguage].whatDietaryRestrictionsDoYouHave
+        {
+          id: 5,
+          component: (
+            <ListUpdateProfile
+              listLabel={
+                translations[currentLanguage].whatDietaryRestrictionsDoYouHave
+              }
+              listsData={[
+                {
+                  label: translations[currentLanguage].glutenFree,
+                  value: "GlutenFree",
+                },
+                {
+                  label: translations[currentLanguage].lactoseFree,
+                  value: "LactoseFree",
+                },
+                {
+                  label: translations[currentLanguage].lactoOvoVegetarian,
+                  value: "LactoOvoVegetarian",
+                },
+                {
+                  label: translations[currentLanguage].vegan,
+                  value: "Vegan",
+                },
+                {
+                  label: translations[currentLanguage].ovoVegetarian,
+                  value: "OvoVegetarian",
+                },
+                {
+                  label: translations[currentLanguage].lactoVegetarian,
+                  value: "LactoVegetarian",
+                },
+              ]}
+              handleNext={() => {
+                setActiveSlide(5);
+              }}
+              selectedValue={stepsSignupData.dietaryRestrictions}
+              handleListItemPress={(value) => {
+                if (stepsSignupData.dietaryRestrictions.includes(value)) {
+                  const filterData =
+                    stepsSignupData.dietaryRestrictions.filter(
+                      (item) => item !== value
+                    );
+                  setStepsSignupData({
+                    ...stepsSignupData,
+                    dietaryRestrictions: filterData,
+                  });
+                } else {
+                  setStepsSignupData({
+                    ...stepsSignupData,
+                    dietaryRestrictions: [
+                      ...stepsSignupData.dietaryRestrictions,
+                      value,
+                    ],
+                  });
                 }
-                listsData={[
-                  {
-                    label: translations[currentLanguage].glutenFree,
-                    value: "GlutenFree",
-                  },
-                  {
-                    label: translations[currentLanguage].lactoseFree,
-                    value: "LactoseFree",
-                  },
-                  {
-                    label: translations[currentLanguage].lactoOvoVegetarian,
-                    value: "LactoOvoVegetarian",
-                  },
-                  {
-                    label: translations[currentLanguage].vegan,
-                    value: "Vegan",
-                  },
-                  {
-                    label: translations[currentLanguage].ovoVegetarian,
-                    value: "OvoVegetarian",
-                  },
-                  {
-                    label: translations[currentLanguage].lactoVegetarian,
-                    value: "LactoVegetarian",
-                  },
-                ]}
-                handleNext={() => {
-                  setActiveSlide(5);
-                }}
-                selectedValue={stepsSignupData.dietaryRestrictions}
-                handleListItemPress={(value) => {
-                  if (stepsSignupData.dietaryRestrictions.includes(value)) {
-                    const filterData =
-                      stepsSignupData.dietaryRestrictions.filter(
-                        (item) => item !== value
-                      );
-                    setStepsSignupData({
-                      ...stepsSignupData,
-                      dietaryRestrictions: filterData,
-                    });
-                  } else {
-                    setStepsSignupData({
-                      ...stepsSignupData,
-                      dietaryRestrictions: [
-                        ...stepsSignupData.dietaryRestrictions,
-                        value,
-                      ],
-                    });
-                  }
-                }}
-                errorMesaage={stepsSignupData.dietTypeErr}
-                mainFooterStyle={{ flex: 1.4, justifyContent: "flex-end" }}
-                mainContainerStyle={{ flex: 4.6 }}
-                isMultiSelection={true}
-                btnText={translations[currentLanguage].next}
-              />
-            ),
-          },
-        ]
+              }}
+              errorMesaage={stepsSignupData.dietTypeErr}
+              mainFooterStyle={{ flex: 1.4, justifyContent: "flex-end" }}
+              mainContainerStyle={{ flex: 4.6 }}
+              isMultiSelection={true}
+              btnText={translations[currentLanguage].next}
+            />
+          ),
+        },
+      ]
       : []),
     {
       // id: 6,
@@ -275,6 +275,21 @@ const SignupSteps = () => {
             });
             try {
               setIsLoading(true);
+              let updatedSelectedLang;
+              const selectedLang = await AsyncStorage.getItem('lang')
+              switch (selectedLang) {
+                case 'en':
+                  updatedSelectedLang = 'English'
+                  break;
+                case 'it':
+                  updatedSelectedLang = 'Italian';
+                  break;
+                case 'sv':
+                  updatedSelectedLang = 'Swedish'
+                  break;
+                default:
+                  break;
+              }
               const payload = {
                 username: userData.username,
                 email: userData.email,
@@ -286,7 +301,8 @@ const SignupSteps = () => {
                 isDietaryRestrictions:
                   stepsSignupData.isSelectedDietaryRestriction,
                 dietaryRestrictions: stepsSignupData.dietaryRestrictions,
-                languagePreference: stepsSignupData.languagePreference,
+                // languagePreference: stepsSignupData.languagePreference,
+                languagePreference: updatedSelectedLang
               };
               delete payload.dietTypeErr;
               const url = getUrl("register");
@@ -326,7 +342,7 @@ const SignupSteps = () => {
               }
             } catch (error) {
               setIsLoading(false);
-              showToast("error", "Internal server error.");
+              showToast("error", translations[currentLanguage].internalServerError);
             }
           }}
           mainContainerStyle={{

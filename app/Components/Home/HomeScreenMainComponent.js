@@ -225,8 +225,7 @@ const HomeScreenMainComponent = ({
                     fontFamily: "Inter_700Bold",
                   }}
                 >
-                  Oops! It looks like this meal doesn't have a recipe yet. Try
-                  selecting another meal or check back later!
+                  {translations[currentLanguage].noMealsYet}
                 </Text>
               </View>
             )}

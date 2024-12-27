@@ -93,9 +93,9 @@ const LoginComponent = ({ handleCloseSlider }) => {
             case "email":
                 if (value === "") {
                     setEmail("");
-                    setEmailErr("Email address is required");
+                    setEmailErr(translations[currentLanguage].emailIsRequired);
                 } else if (emailValidation(email)) {
-                    setEmailErr("Please enter valid email address");
+                    setEmailErr(translations[currentLanguage].validEmail);
                     setEmail(value);
                 } else {
                     setEmailErr("");
@@ -105,7 +105,7 @@ const LoginComponent = ({ handleCloseSlider }) => {
             case "password":
                 if (value === "") {
                     setPassword("");
-                    setPasswordErr("Password is required");
+                    setPasswordErr(translations[currentLanguage].passwordIsRequired);
                 } else {
                     setPasswordErr("");
                     setPassword(value);
@@ -119,14 +119,14 @@ const LoginComponent = ({ handleCloseSlider }) => {
     const isValidateForm = () => {
         let isValid = true;
         if (email === "") {
-            setEmailErr("Email address is required");
+            setEmailErr(translations[currentLanguage].emailIsRequired);
             isValid = false;
         } else if (emailValidation(email)) {
-            setEmailErr("Please enter valid email address");
+            setEmailErr(translations[currentLanguage].validEmail);
             isValid = false;
         }
         if (password === "") {
-            setPasswordErr("Password is required");
+            setPasswordErr(translations[currentLanguage].passwordIsRequired);
             isValid = false;
         }
         return isValid;
@@ -164,7 +164,7 @@ const LoginComponent = ({ handleCloseSlider }) => {
                 }
             } catch (error) {
                 setIsLoading(false);
-                showToast("error", "Internal server error.");
+                showToast("error", translations[currentLanguage].internalServerError);
             }
         }
     };

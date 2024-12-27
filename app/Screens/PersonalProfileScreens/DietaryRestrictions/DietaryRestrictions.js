@@ -95,14 +95,17 @@ const Index = ({ mainContainerStyle = {}, mainFooterStyle = {} }) => {
         if (data.updatedUser.isDietaryRestrictions) {
           navigate("DietaryRestrictionsOptions");
         } else {
-          navigate("Language", { firstTime: false });
+          // navigate("Language", { firstTime: false });
+          navigate("HomeTabs", {
+            screen: "Settings",
+          });
         }
       } else {
         showToast("error", message);
       }
     } catch (error) {
       setIsLoading(false);
-      showToast("error", "Internal server error.");
+      showToast("error", translations[currentLanguage].internalServerError);
     }
   };
   useEffect(() => {

@@ -163,10 +163,10 @@ const SelectMeal = ({
                                 ? selectedFoodGroupList
                                 : selectedMeal;
                         const orderMap = intialMealData.map((item) => item.value);
-                        newUpdateData.sort((a, b) => orderMap.indexOf(a) - orderMap.indexOf(b));
+                        newUpdateData.sort((a, b) => orderMap.indexOf(a) - orderMap.indexOf(b));                        
                         handleSelectMeal(
                             newUpdateData.length === 0
-                                ? intialMealData
+                                ? orderMap
                                 : newUpdateData
                         );
                         setSelectedFoodGroupList([]);

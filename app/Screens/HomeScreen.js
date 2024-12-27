@@ -9,7 +9,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { images } from "../Resource/Images";
 import { Image } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import { getUrl } from "../Network/url";
 import { post } from "../Network/request";
 import {
@@ -24,6 +24,7 @@ import COLORS from "../constants/colors";
 import showToast from "../Components/Core/CustomTost";
 import { translations } from "../Language";
 import { useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -38,10 +39,7 @@ const styles = StyleSheet.create({
 });
 const HomeScreen = () => {
   const currentLanguage = useSelector((state) => state.language.language);
-  const route = useRoute();
   const sheetRef = useRef(null);
-
-  const { selectedItems } = route.params;
   const recipeTab = [
     { label: translations[currentLanguage].ingredients, value: "Ingredients" },
     { label: translations[currentLanguage].recipe, value: "Recipe" },
@@ -78,8 +76,11 @@ const HomeScreen = () => {
       "Saturday",
     ];
     let day = days[selectedDate.getDay()];
-    const updatedSelectedItems = selectedItems.map((item) => item);
-    if (updatedSelectedItems.includes("Morning Snack")) {      
+    const selectedMeals = JSON.parse(
+      await AsyncStorage.getItem("selectedMeal")
+    );
+    const updatedSelectedItems = selectedMeals.map((item) => item);
+    if (updatedSelectedItems.includes("Morning Snack")) {
       const findMSnackIndex = updatedSelectedItems.findIndex(
         (item) => item === "Morning Snack"
       );
@@ -134,7 +135,7 @@ const HomeScreen = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      showToast("error", "Internal server error.");
+      showToast("error", translations[currentLanguage].internalServerError);
     }
   };
   const handleSnapPress = useCallback((index) => {
@@ -143,8 +144,13 @@ const HomeScreen = () => {
 
   useEffect(() => {
     getDaywiseFoodgroup();
-  }, [selectedDate, selectedItems, currentLanguage]);
-
+  }, [selectedDate, currentLanguage]);
+  useFocusEffect(
+    React.useCallback(() => {
+      handleSnapPress(-1);
+      getDaywiseFoodgroup();
+    }, [])
+  );
   const handleSheetChange = useCallback((index) => {
     if (index === -1) {
       setActiveTab(0);

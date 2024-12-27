@@ -24,6 +24,7 @@ import COLORS from "../constants/colors";
 import showToast from "../Components/Core/CustomTost";
 import { translations } from "../Language";
 import { useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -144,20 +145,27 @@ const MealsScreen = () => {
           }
           return data;
         });
-        const RecipeData = filteredData[0].Items.filter(
+        const RecipeData = filteredData.length > 0 && filteredData[0].Items.filter(
           (itemData) => itemData.Type === "Recipe"
         );
-        setSelectedRecipe(RecipeData[0]);
-        setMealList(filteredData);
-        setSelectedMealsData(updateRecipeSelectedMeal);
-        handleSnapPress(0);
+        if (RecipeData) {
+          setSelectedRecipe(RecipeData[0]);
+          handleSnapPress(0);
+          setSelectedMealsData(updateRecipeSelectedMeal);
+          setMealList(filteredData);
+        } else {
+          handleSnapPress(-1);
+          setSelectedRecipe(null)
+          setSelectedMealsData([]);
+          setMealList([])
+        }
       } else {
         setIsLoading(false);
         showToast("error", message);
       }
     } catch (error) {
       setIsLoading(false);
-      showToast("error", "Internal server error.");
+      showToast("error", translations[currentLanguage].internalServerError);
     }
   };
   const handleSnapPress = useCallback((index) => {
@@ -167,6 +175,11 @@ const MealsScreen = () => {
   useEffect(() => {
     getDaywiseFoodgroup();
   }, [currentLanguage]);
+  useFocusEffect(
+    React.useCallback(() => {
+      getDaywiseFoodgroup();
+    }, [])
+  );
   return (
     <SafeAreaView style={styles.mainWelcomeContainer}>
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -197,7 +210,7 @@ const MealsScreen = () => {
             ref={sheetRef}
             index={-1}
             snapPoints={[hp(75)]}
-            enablePanDownToClose={false}
+            enablePanDownToClose={selectedRecipe ? false : true}
             backgroundStyle={{ borderRadius: 40 }}
             handleIndicatorStyle={{
               backgroundColor: COLORS.white,

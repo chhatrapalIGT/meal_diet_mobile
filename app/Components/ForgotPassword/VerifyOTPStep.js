@@ -146,7 +146,7 @@ const VerifyOTPStep = ({ handleSubmit, timeLeft, handleForgotPassword }) => {
         onPress={() => {
           const isValid = otp.some((field) => field === "");
           if (isValid) {
-            setOtpErr("All fields are required.");
+            setOtpErr(translations[currentLanguage].allFieldsAreRequired);
           } else {
             setOtpErr("");
             handleSubmit({ otp: otp.join("") });
